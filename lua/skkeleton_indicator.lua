@@ -1,0 +1,119 @@
+local fn = vim.fn
+local api = function(name) return vim.api['nvim_'..name] end
+
+local M = {
+  funcs = {},
+  my_name = (function()
+    local file = debug.getinfo(1, 'S').source
+    return file.match'/(%a+)%.lua$'
+  end)(),
+  mode = {
+    eiji = {
+      hl_name = 'skkeleton-indicator-eiji',
+      hl = {fg = '#88c0d0', bg = '#2e3440', bold = true},
+      text = '英字',
+    },
+    hira = {
+      hl_name = 'skkeleton-indicator-hira',
+      hl = {fg = '#2e3440', bg = '#a3be8c', bold = true},
+      text = 'ひら',
+    },
+    kata = {
+      hl_name = 'skkeleton-indicator-kata',
+      hl = {fg = '#2e3440', bg = '#ebcb8b', bold = true},
+      text = 'カタ',
+    },
+  },
+  fade_out_ms = 3000,
+}
+
+function M.new()
+  return setmetatable({
+    ns = api.create_namespace(M.my_name),
+    timer = nil,
+    winid = 0,
+  }, { __index = M })
+end
+
+function M.setup()
+  local self = M.new()
+  api._set_hl_ns(self.ns)
+  for _, v in pairs(self.mode) do api.set_hl(self.ns, v.hl_name, v.hl) end
+  self:autocmd{
+    {'InsertEnter', '*', function() self:open() end},
+    {'InsertLeave', '*', function() self:close() end},
+    {'CursorMovedI', '*', function() self:move() end},
+    {'User', 'skkeleton-mode-changed', function() self:update() end},
+    {'User', 'skkeleton-disable-post', function() self:update() end},
+    {'User', 'skkeleton-enable-post', function() self:update() end},
+  }
+end
+
+function M:autocmd(defs)
+  local cmds = {'augroup '..M.my_name}
+  for _, def in ipairs(defs) do
+    table.insert(M.funcs, def[3])
+    local cmd = ([[lua require'%s'.funcs[%d]()]]):format(M.my_name, #M.funcs)
+    table.insert(cmds, ('autocmd %s %s %s'):format(M.my_name, def[1], def[2]))
+  end
+  table.insert(cmds, 'augroup END')
+  api.exec(table.concat(cmds, '\n'), false)
+end
+
+function M:mode()
+  local ok, m = pcall(fn['skkeleton#mode'])
+  if not ok or m == '' then
+    return self.mode.eiji
+  elseif m == 'hira' then
+    return self.mode.hira
+  end
+  return self.mode.kata
+end
+
+function M:open()
+  if self.timer then return end
+  local mode = self:mode()
+  local buf = api.create_buf(false, true)
+  api.buf_set_lines(buf, 0, 0, false, {mode.text})
+  api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
+  self.winid = api.open_win(buf, false, {
+    style = 'minimal',
+    relative = 'cursor',
+    row = 1,
+    col = 1,
+    height = 1,
+    width = 4,
+    focusable = false,
+    noautocmd = true,
+  })
+  self.timer = fn.timer_start(M.fade_out_ms, function() self:close() end)
+end
+
+function M:update()
+  vim.schedule(function()
+    self:close()
+    self:open()
+  end)
+end
+
+function M:move()
+  if not self.timer then return end
+  api.win_set_config(self.winid, {
+    relative = 'cursor',
+    row = 1,
+    col = 1,
+  })
+end
+
+function M:close()
+  if not self.timer then return end
+  fn.timer_stop(self.timer)
+  local buf = api.win_get_buf(self.winid)
+  api.win_close(self.winid, false)
+  api.buf_clear_namespace(buf, self.ns, 0, -1)
+  api.buf_delete(buf, {force = true})
+  self.timer = nil
+  self.winid = 0
+end
+
+return M
