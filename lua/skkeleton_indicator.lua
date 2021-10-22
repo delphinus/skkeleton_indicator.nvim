@@ -1,13 +1,15 @@
 local fn = vim.fn
-local api = function(name) return vim.api['nvim_'..name] end
+local api = setmetatable({}, {
+  __index = function(_, name) return vim.api['nvim_'..name] end
+})
 
 local M = {
   funcs = {},
   my_name = (function()
     local file = debug.getinfo(1, 'S').source
-    return file.match'/(%a+)%.lua$'
+    return file:match'/([^/]+).lua$'
   end)(),
-  mode = {
+  modes = {
     eiji = {
       hl_name = 'skkeleton-indicator-eiji',
       hl = {fg = '#88c0d0', bg = '#2e3440', bold = true},
@@ -38,7 +40,7 @@ end
 function M.setup()
   local self = M.new()
   api._set_hl_ns(self.ns)
-  for _, v in pairs(self.mode) do api.set_hl(self.ns, v.hl_name, v.hl) end
+  for _, v in pairs(M.modes) do api.set_hl(self.ns, v.hl_name, v.hl) end
   self:autocmd{
     {'InsertEnter', '*', function() self:open() end},
     {'InsertLeave', '*', function() self:close() end},
@@ -54,7 +56,7 @@ function M:autocmd(defs)
   for _, def in ipairs(defs) do
     table.insert(M.funcs, def[3])
     local cmd = ([[lua require'%s'.funcs[%d]()]]):format(M.my_name, #M.funcs)
-    table.insert(cmds, ('autocmd %s %s %s'):format(M.my_name, def[1], def[2]))
+    table.insert(cmds, ('autocmd %s %s %s'):format(def[1], def[2], cmd))
   end
   table.insert(cmds, 'augroup END')
   api.exec(table.concat(cmds, '\n'), false)
@@ -63,11 +65,11 @@ end
 function M:mode()
   local ok, m = pcall(fn['skkeleton#mode'])
   if not ok or m == '' then
-    return self.mode.eiji
+    return M.modes.eiji
   elseif m == 'hira' then
-    return self.mode.hira
+    return M.modes.hira
   end
-  return self.mode.kata
+  return M.modes.kata
 end
 
 function M:open()
