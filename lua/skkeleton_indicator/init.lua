@@ -7,7 +7,7 @@ local M = {
   funcs = {},
   my_name = (function()
     local file = debug.getinfo(1, 'S').source
-    return file:match'/([^/]+).lua$'
+    return file:match'/([^/]+)/[^/]+.lua$'
   end)(),
   modes = {
     eiji = {
