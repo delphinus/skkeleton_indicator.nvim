@@ -29,18 +29,13 @@ function M.new(opts)
   }
 end
 
-function M:is_enabled()
+function M:is_disabled()
   local buf = api.get_current_buf()
   local current_ft = api.buf_get_option(buf, 'filetype')
-  print(current_ft)
-  local ft_ok = (function()
-    for _, ft in ipairs(self.ignore_ft) do
-      if current_ft == ft then return false end
-    end
-    return true
-  end)()
-  print(ft_ok, self.buf_filter(buf))
-  return not ft_ok and not self.buf_filter(buf)
+  for _, ft in ipairs(self.ignore_ft) do
+    if current_ft == ft then return true end
+  end
+  return not self.buf_filter(buf)
 end
 
 function M:method(name) return function() self[name](self) end end
@@ -55,7 +50,7 @@ function M:set_text(buf)
 end
 
 function M:open()
-  if self.timer or not self:is_enabled() then return end
+  if self.timer or self:is_disabled() then return end
   local buf = api.create_buf(false, true)
   self:set_text(buf)
   self.winid = api.open_win(buf, false, {
