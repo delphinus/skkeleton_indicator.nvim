@@ -29,7 +29,7 @@ function M.new(opts)
     fade_out_ms = opts.fadeOutMs,
     ignore_ft = opts.ignoreFt,
     buf_filter = opts.bufFilter,
-  }, { __index = M })
+  }, {__index = M})
   Autocmd.new(opts.moduleName):add{
     {'InsertEnter', '*', self:method'open'},
     {'InsertLeave', '*', self:method'close'},
