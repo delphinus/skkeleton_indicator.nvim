@@ -55,7 +55,6 @@ function M:set_text(buf)
   local mode = self.modes:detect()
   api.buf_set_lines(buf, 0, 0, false, {mode.text})
   api.buf_clear_namespace(buf, self.ns, 0, -1)
-  print(mode.hl_name)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
   if self.timer then fn.timer_stop(self.timer) end
   self.timer = fn.timer_start(self.fade_out_ms, self:method'close')
