@@ -102,7 +102,7 @@ function M:open()
 end
 
 function M:update()
-  vim.schedule(function()
+  local function update()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
     -- here is the Insert mode.
@@ -114,7 +114,12 @@ function M:update()
     else
       self:open()
     end
-  end)
+  end
+  if vim.in_fast_event() then
+    update()
+  else
+    vim.schedule(update)
+  end
 end
 
 function M:move()
