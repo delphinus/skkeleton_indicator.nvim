@@ -42,13 +42,17 @@ function M.setup()
   api._set_hl_ns(self.ns)
   for _, v in pairs(M.modes) do api.set_hl(self.ns, v.hl_name, v.hl) end
   self:autocmd{
-    {'InsertEnter', '*', function() self:open() end},
-    {'InsertLeave', '*', function() self:close() end},
-    {'CursorMovedI', '*', function() self:move() end},
-    {'User', 'skkeleton-mode-changed', function() self:update() end},
-    {'User', 'skkeleton-disable-post', function() self:update() end},
-    {'User', 'skkeleton-enable-post', function() self:update() end},
+    {'InsertEnter', '*', self:method'open'},
+    {'InsertLeave', '*', self:method'close'},
+    {'CursorMovedI', '*', self:method'move'},
+    {'User', 'skkeleton-mode-changed', self:method'update'},
+    {'User', 'skkeleton-disable-post', self:method'update'},
+    {'User', 'skkeleton-enable-post', self:method'update'},
   }
+end
+
+function M:method(name)
+  return function() self[name](self) end
 end
 
 function M:autocmd(defs)
