@@ -8,7 +8,7 @@ end)()
 local M = {}
 
 function M.setup(opts)
-  Indicator.new(
+  M.instance = Indicator.new(
     vim.tbl_extend('keep', opts or {}, {
       module_name = module_name,
       eiji_hl_name = module_name..'_eiji',
@@ -20,6 +20,8 @@ function M.setup(opts)
       kata_text = 'カタ',
       hankata_text = '半ｶﾀ',
       fade_out_ms = 3000,
+      ignore_ft = {},
+      buf_filter = function() return true end,
     })
   )
 end

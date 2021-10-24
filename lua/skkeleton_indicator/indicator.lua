@@ -16,6 +16,8 @@ function M.new(opts)
     modes = Modes.new(ns, opts),
     fade_out_ms = opts.fade_out_ms,
     ns = api.create_namespace(opts.module_name),
+    ignore_ft = opts.ignore_ft,
+    buf_filter = opts.buf_filter,
   }, { __index = M })
   Autocmd.new(opts.module_name):add{
     {'InsertEnter', '*', self:method'open'},
@@ -25,6 +27,15 @@ function M.new(opts)
     {'User', 'skkeleton-disable-post', self:method'update'},
     {'User', 'skkeleton-enable-post', self:method'update'},
   }
+end
+
+function M:is_disabled()
+  local buf = api.get_current_buf()
+  local current_ft = api.buf_get_option(buf, 'filetype')
+  for _, ft in ipairs(self.ignore_ft) do
+    if current_ft == ft then return true end
+  end
+  return not self.buf_filter(buf)
 end
 
 function M:method(name) return function() self[name](self) end end
@@ -39,7 +50,7 @@ function M:set_text(buf)
 end
 
 function M:open()
-  if self.timer then return end
+  if self.timer or self:is_disabled() then return end
   local buf = api.create_buf(false, true)
   self:set_text(buf)
   self.winid = api.open_win(buf, false, {

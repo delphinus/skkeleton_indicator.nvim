@@ -72,8 +72,17 @@ hankata_text                           *skkeleton-indicator-config-hankata_text*
         (デフォルト 'カタ')
         半角カタカナモードで表示される文字列です。
 
-fade_out_ms                                    *skkeleton_indicator_fade_out_ms*
+fade_out_ms                             *skkeleton-indicator-config_fade_out_ms*
         (デフォルト 3000)
         インジケータが消えるまでの時間です。ミリ秒で指定します。
+
+ignore_ft                                        *skkeleton-indicator_ignore_ft*
+        (デフォルト {})
+        ファイルタイプを指定するとインジケータが表示されなくなります。
+
+buf_filter                                      *skkeleton-indicator_buf_filter*
+        (デフォルト function() return true end)
+        インジケータを表示するか決める関数です。true を返すと表示します。
+        ignore_ft のファイルタイプの後に評価されます。
 
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
