@@ -66,7 +66,7 @@ function M:autocmd(defs)
   api.exec(table.concat(cmds, '\n'), false)
 end
 
-function M:mode()
+function M:skk_mode()
   local ok, m = pcall(fn['skkeleton#mode'])
   if not ok or m == '' then
     return M.modes.eiji
@@ -78,7 +78,7 @@ end
 
 function M:open()
   if self.timer then return end
-  local mode = self:mode()
+  local mode = self:skk_mode()
   local buf = api.create_buf(false, true)
   api.buf_set_lines(buf, 0, 0, false, {mode.text})
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
@@ -92,13 +92,27 @@ function M:open()
     focusable = false,
     noautocmd = true,
   })
-  self.timer = fn.timer_start(M.fade_out_ms, function() self:close() end)
+  self.timer = fn.timer_start(M.fade_out_ms, self:method'close')
 end
 
 function M:update()
   vim.schedule(function()
-    self:close()
-    self:open()
+    -- update() will be called in InsertLeave because skkeleton invokes the
+    -- skkeleton-mode-changed event. So here it should checks mode() to confirm
+    -- here is the Insert mode.
+    if not fn.mode():find'i' then return end
+
+    if not self.timer then
+      self:open()
+      return
+    end
+    fn.timer_stop(self.timer)
+    local mode = self:skk_mode()
+    local buf = api.win_get_buf(self.winid)
+    api.buf_set_lines(buf, 0, 0, false, {mode.text})
+    api.buf_clear_namespace(buf, self.ns, 0, -1)
+    api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
+    self.timer = fn.timer_start(M.fade_out_ms, self:method'close')
   end)
 end
 
