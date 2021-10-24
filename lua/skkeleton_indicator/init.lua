@@ -20,6 +20,8 @@ function M.setup(opts)
       kata_text = 'カタ',
       hankata_text = '半ｶﾀ',
       fade_out_ms = 3000,
+      ignore_ft = {'TelescopePrompt'},
+      buf_filter = function() return true end,
     })
   )
 end
