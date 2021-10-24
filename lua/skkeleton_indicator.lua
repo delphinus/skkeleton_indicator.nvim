@@ -113,15 +113,15 @@ end
 
 function M:close()
   if not self.timer then return end
-  vim.schedule(function()
-    fn.timer_stop(self.timer)
-    local buf = api.win_get_buf(self.winid)
-    api.win_close(self.winid, false)
-    api.buf_clear_namespace(buf, self.ns, 0, -1)
-    api.buf_delete(buf, {force = true})
-    self.timer = nil
-    self.winid = 0
-  end)
+  fn.timer_stop(self.timer)
+  self.timer = nil
+
+  if self.winid == 0 then return end
+  local buf = api.win_get_buf(self.winid)
+  api.win_close(self.winid, false)
+  api.buf_clear_namespace(buf, self.ns, 0, -1)
+  api.buf_delete(buf, {force = true})
+  self.winid = 0
 end
 
 return M
