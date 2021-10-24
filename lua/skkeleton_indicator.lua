@@ -11,17 +11,17 @@ local M = {
   end)(),
   modes = {
     eiji = {
-      hl_name = 'skkeleton-indicator-eiji',
+      hl_name = 'skkeleton_indicator_eiji',
       hl = {fg = '#88c0d0', bg = '#2e3440', bold = true},
       text = '英字',
     },
     hira = {
-      hl_name = 'skkeleton-indicator-hira',
+      hl_name = 'skkeleton_indicator_hira',
       hl = {fg = '#2e3440', bg = '#a3be8c', bold = true},
       text = 'ひら',
     },
     kata = {
-      hl_name = 'skkeleton-indicator-kata',
+      hl_name = 'skkeleton_indicator_kata',
       hl = {fg = '#2e3440', bg = '#ebcb8b', bold = true},
       text = 'カタ',
     },
