@@ -76,12 +76,19 @@ function M:skk_mode()
   return M.modes.kata
 end
 
+function M:set_text(buf)
+  local mode = self:skk_mode()
+  api.buf_set_lines(buf, 0, 0, false, {mode.text})
+  api.buf_clear_namespace(buf, self.ns, 0, -1)
+  api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
+  if self.timer then fn.timer_stop(self.timer) end
+  self.timer = fn.timer_start(M.fade_out_ms, self:method'close')
+end
+
 function M:open()
   if self.timer then return end
-  local mode = self:skk_mode()
   local buf = api.create_buf(false, true)
-  api.buf_set_lines(buf, 0, 0, false, {mode.text})
-  api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
+  self:set_text(buf)
   self.winid = api.open_win(buf, false, {
     style = 'minimal',
     relative = 'cursor',
@@ -92,7 +99,6 @@ function M:open()
     focusable = false,
     noautocmd = true,
   })
-  self.timer = fn.timer_start(M.fade_out_ms, self:method'close')
 end
 
 function M:update()
@@ -103,16 +109,11 @@ function M:update()
     if not fn.mode():find'i' then return end
 
     if not self.timer then
+      local buf = api.win_get_buf(self.winid)
+      self:set_text(buf)
+    else
       self:open()
-      return
     end
-    fn.timer_stop(self.timer)
-    local mode = self:skk_mode()
-    local buf = api.win_get_buf(self.winid)
-    api.buf_set_lines(buf, 0, 0, false, {mode.text})
-    api.buf_clear_namespace(buf, self.ns, 0, -1)
-    api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
-    self.timer = fn.timer_start(M.fade_out_ms, self:method'close')
   end)
 end
 
