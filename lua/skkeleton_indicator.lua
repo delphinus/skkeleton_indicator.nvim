@@ -108,7 +108,7 @@ function M:update()
     -- here is the Insert mode.
     if not fn.mode():find'i' then return end
 
-    if not self.timer then
+    if self.timer then
       local buf = api.win_get_buf(self.winid)
       self:set_text(buf)
     else
