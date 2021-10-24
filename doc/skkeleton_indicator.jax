@@ -21,66 +21,66 @@ USAGE                                                *skkeleton-indicator-usage*
 い。
 >
     vim.api.nvim_exec([[
-      hi skkeleton_indicator_eiji guifg=#88c0d0 guibg=#2e3440 gui=bold
-      hi skkeleton_indicator_hira guifg=#2e3440 guibg=#a3be8c gui=bold
-      hi skkeleton_indicator_kata guifg=#2e3440 guibg=#ebcb8b gui=bold
-      hi skkeleton_indicator_hankata guifg=#2e3440 guibg=#b48ead gui=bold
+      hi SkkeletonIndicatorEiji guifg=#88c0d0 guibg=#2e3440 gui=bold
+      hi SkkeletonIndicatorHira guifg=#2e3440 guibg=#a3be8c gui=bold
+      hi SkkeletonIndicatorKata guifg=#2e3440 guibg=#ebcb8b gui=bold
+      hi SkkeletonIndicatorHankata guifg=#2e3440 guibg=#b48ead gui=bold
     ]], false)
     require'skkeleton_indicator'.setup{}
 <
 既存のハイライトを使う場合はその名称を setup() を呼ぶ際に指定してください。
 >
     require'skkeleton_indicator'.setup{
-      eiji_hl_name = 'LineNr',
-      hira_hl_name = 'String',
-      kata_hl_name = 'Todo',
-      hankata_hl_name = 'Special',
+      eijiHlName = 'LineNr',
+      hiraHlName = 'String',
+      kataHlName = 'Todo',
+      hankataHlName = 'Special',
     }
 <
 ==============================================================================
 CONFIG                                              *skkeleton-indicator-config*
 
-eiji_hl_name                           *skkeleton-indicator-config-eiji_hl_name*
+eijiHlName                               *skkeleton-indicator-config-eijiHlName*
         (デフォルト 'skkeleton_indicator_eiji')
         直接入力モードで表示される文字列に利用されるハイライトグループです。
 
-hira_hl_name                           *skkeleton-indicator-config-hira_hl_name*
+hiraHlName                               *skkeleton-indicator-config-hiraHlName*
         (デフォルト 'skkeleton_indicator_hira')
         ひらがなモードで表示されるハイライトグループです。
 
-kata_hl_name                           *skkeleton-indicator-config-kata_hl_name*
+kataHlName                               *skkeleton-indicator-config-kataHlName*
         (デフォルト 'skkeleton_indicator_kata')
         カタカナモードで表示されるハイライトグループです。
 
-hankata_hl_name                     *skkeleton-indicator-config-hankata_hl_name*
+hankataHlName                         *skkeleton-indicator-config-hankataHlName*
         (デフォルト 'skkeleton_indicator_hankata')
         半角カタカナモードで表示されるハイライトグループです。
 
-eiji_text                                 *skkeleton-indicator-config-eiji_text*
+eijiText                                   *skkeleton-indicator-config-eijiText*
         (デフォルト '英字')
         直接入力モードで表示される文字列です。
 
-hira_text                                 *skkeleton-indicator-config-hira_text*
+hiraText                                   *skkeleton-indicator-config-hiraText*
         (デフォルト 'ひら')
         ひらがなモードで表示される文字列です。
 
-kata_text                                 *skkeleton-indicator-config-kata_text*
+kataText                                   *skkeleton-indicator-config-kataText*
         (デフォルト 'カタ')
         カタカナモードで表示される文字列です。
 
-hankata_text                           *skkeleton-indicator-config-hankata_text*
+hankataText                             *skkeleton-indicator-config-hankataText*
         (デフォルト 'カタ')
         半角カタカナモードで表示される文字列です。
 
-fade_out_ms                             *skkeleton-indicator-config_fade_out_ms*
+fadeOutMs                                 *skkeleton-indicator-config-fadeOutMs*
         (デフォルト 3000)
         インジケータが消えるまでの時間です。ミリ秒で指定します。
 
-ignore_ft                                        *skkeleton-indicator_ignore_ft*
+ignoreFt                                   *skkeleton-indicator-config-ignoreFt*
         (デフォルト {})
         ファイルタイプを指定するとインジケータが表示されなくなります。
 
-buf_filter                                      *skkeleton-indicator_buf_filter*
+bufFilter                                 *skkeleton-indicator-config-bufFilter*
         (デフォルト function() return true end)
         インジケータを表示するか決める関数です。true を返すと表示します。
         ignore_ft のファイルタイプの後に評価されます。

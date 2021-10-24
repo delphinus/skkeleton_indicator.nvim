@@ -3,7 +3,7 @@ local fn = require'skkeleton_indicator.util'.fn
 
 local M = {}
 
-function M.new(ns, opts)
+function M.new(opts)
   local self = setmetatable({
     eiji = {
       hl_name = opts.module_name..'_eiji',
@@ -27,16 +27,17 @@ function M.new(ns, opts)
     },
   }, {__index = M})
 
-  api._set_hl_ns(ns)
+  api._set_hl_ns(opts.ns)
   -- opts.eiji_hl_name
   -- opts.hira_hl_name
   -- opts.kata_hl_name
+  -- opts.hankata_hl_name
   for _, v in ipairs{'eiji', 'hira', 'kata', 'hankata'} do
     local mode = self[v]
     local hl_name = opts[v..'_hl_name']
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)
     if ok then mode.hl = hl end
-    api.set_hl(ns, mode.hl_name, mode.hl)
+    api.set_hl(opts.ns, mode.hl_name, mode.hl)
   end
 
   return self

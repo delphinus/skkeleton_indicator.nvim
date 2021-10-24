@@ -10,16 +10,27 @@ local M = {
 }
 
 function M.new(opts)
-  local ns = api.create_namespace(opts.module_name)
+  local ns = api.create_namespace(opts.moduleName)
+  local modes = Modes.new{
+    ns = ns,
+    module_name = opts.moduleName,
+    eiji_hl_name = opts.eijiHlName,
+    hira_hl_name = opts.hiraHlName,
+    kata_hl_name = opts.kataHlName,
+    hankata_hl_name = opts.hankataHlName,
+    eiji_text = opts.eijiText,
+    hira_text = opts.hiraText,
+    kata_text = opts.kataText,
+    hankata_text = opts.hankataText,
+  }
   local self = setmetatable({
-    module_name = opts.module_name,
-    modes = Modes.new(ns, opts),
-    fade_out_ms = opts.fade_out_ms,
-    ns = api.create_namespace(opts.module_name),
-    ignore_ft = opts.ignore_ft,
-    buf_filter = opts.buf_filter,
+    ns = ns,
+    modes = modes,
+    fade_out_ms = opts.fadeOutMs,
+    ignore_ft = opts.ignoreFt,
+    buf_filter = opts.bufFilter,
   }, { __index = M })
-  Autocmd.new(opts.module_name):add{
+  Autocmd.new(opts.moduleName):add{
     {'InsertEnter', '*', self:method'open'},
     {'InsertLeave', '*', self:method'close'},
     {'CursorMovedI', '*', self:method'move'},
@@ -44,6 +55,7 @@ function M:set_text(buf)
   local mode = self.modes:detect()
   api.buf_set_lines(buf, 0, 0, false, {mode.text})
   api.buf_clear_namespace(buf, self.ns, 0, -1)
+  print(mode.hl_name)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
   if self.timer then fn.timer_stop(self.timer) end
   self.timer = fn.timer_start(self.fade_out_ms, self:method'close')
