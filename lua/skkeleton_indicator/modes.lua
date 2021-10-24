@@ -31,7 +31,7 @@ function M.new(ns, opts)
     local hl_name = opts[v..'_hl_name']
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)
     if ok then mode.hl = hl end
-    api.set_hl(ns, mode.hl_name, hl)
+    api.set_hl(ns, mode.hl_name, mode.hl)
   end
 
   return self
