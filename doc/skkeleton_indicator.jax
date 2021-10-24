@@ -1,0 +1,69 @@
+*skkeleton_indicator.txt*	Skkeleton の状態を示すインジケータ
+
+Author: delphinus
+Licence: zlib
+
+==============================================================================
+INTRODUCTION                                  *skkeleton-indicator-introduction*
+
+*skkeleton_indicator* は |skkeleton| の状態をカーソルの側に表示します。
+
+NOTE: このプラグインは Neovim 専用です。
+
+==============================================================================
+USAGE                                                *skkeleton-indicator-usage*
+
+プラグインを読み込んだ後に setup() 関数を呼び出してください。
+>
+    require'skkeleton_indicator'.setup{}
+<
+文字列が表示される際のハイライトを変える場合、setup() を呼ぶ前に定義してくださ
+い。
+>
+    vim.api.nvim_exec([[
+      hi skkeleton_indicator_eiji guifg=#88c0d0 guibg=#2e3440 gui=bold
+      hi skkeleton_indicator_hira guifg=#2e3440 guibg=#a3be8c gui=bold
+      hi skkeleton_indicator_kata guifg=#2e3440 guibg=#ebcb8b gui=bold
+    ]], false)
+    require'skkeleton_indicator'.setup{}
+<
+既存のハイライトを使う場合はその名称を setup() を呼ぶ際に指定してください。
+>
+    require'skkeleton_indicator'.setup{
+      eiji_hl_name = 'LineNr',
+      hira_hl_name = 'String',
+      kata_hl_name = 'Todo',
+    }
+<
+==============================================================================
+CONFIG                                              *skkeleton-indicator-config*
+
+eiji_hl_name                           *skkeleton-indicator-config-eiji_hl_name*
+        (デフォルト 'skkeleton_indicator_eiji')
+        直接入力モードで表示される文字列に利用されるハイライトグループです。
+
+hira_hl_name                           *skkeleton-indicator-config-hira_hl_name*
+        (デフォルト 'skkeleton_indicator_hira')
+        ひらがなモードで表示されるハイライトグループです。
+
+kata_hl_name                           *skkeleton-indicator-config-hira_hl_name*
+        (デフォルト 'skkeleton_indicator_kata')
+        カタカナモードで表示されるハイライトグループです。
+
+eiji_text                                 *skkeleton-indicator-config-eiji_text*
+        (デフォルト '英字')
+        直接入力モードで表示される文字列です。
+
+hira_text                                 *skkeleton-indicator-config-hira_text*
+        (デフォルト 'ひら')
+        ひらがなモードで表示される文字列です。
+
+kata_text                                 *skkeleton-indicator-config-hira_text*
+        (デフォルト 'カタ')
+        カタカナモードで表示される文字列です。
+
+fade_out_ms                                    *skkeleton_indicator_fade_out_ms*
+        (デフォルト 3000)
+        インジケータが消えるまでの時間です。ミリ秒で指定します。
+
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
