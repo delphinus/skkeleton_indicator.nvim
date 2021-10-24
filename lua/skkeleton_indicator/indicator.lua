@@ -71,7 +71,7 @@ function M:open()
     row = 1,
     col = 1,
     height = 1,
-    width = 4,
+    width = self.modes.width,
     focusable = false,
     noautocmd = true,
   })

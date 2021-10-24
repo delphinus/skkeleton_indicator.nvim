@@ -25,6 +25,7 @@ function M.new(opts)
       hl = {fg = 'black', bg = 'magenta', bold = true},
       text = opts.hankata_text,
     },
+    width = 0,
   }, {__index = M})
 
   api._set_hl_ns(opts.ns)
@@ -34,6 +35,8 @@ function M.new(opts)
   -- opts.hankata_hl_name
   for _, v in ipairs{'eiji', 'hira', 'kata', 'hankata'} do
     local mode = self[v]
+    local w = fn.strdisplaywidth(mode.text)
+    if w > self.width then self.width = w end
     local hl_name = opts[v..'_hl_name']
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)
     if ok then mode.hl = hl end
