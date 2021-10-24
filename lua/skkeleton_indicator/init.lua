@@ -14,9 +14,11 @@ function M.setup(opts)
       eiji_hl_name = module_name..'_eiji',
       hira_hl_name = module_name..'_hira',
       kata_hl_name = module_name..'_kata',
+      hankata_hl_name = module_name..'_hankata',
       eiji_text = '英字',
       hira_text = 'ひら',
       kata_text = 'カタ',
+      hankata_text = '半ｶﾀ',
       fade_out_ms = 3000,
     })
   )

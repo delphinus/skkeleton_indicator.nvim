@@ -24,6 +24,7 @@ USAGE                                                *skkeleton-indicator-usage*
       hi skkeleton_indicator_eiji guifg=#88c0d0 guibg=#2e3440 gui=bold
       hi skkeleton_indicator_hira guifg=#2e3440 guibg=#a3be8c gui=bold
       hi skkeleton_indicator_kata guifg=#2e3440 guibg=#ebcb8b gui=bold
+      hi skkeleton_indicator_hankata guifg=#2e3440 guibg=#b48ead gui=bold
     ]], false)
     require'skkeleton_indicator'.setup{}
 <
@@ -33,6 +34,7 @@ USAGE                                                *skkeleton-indicator-usage*
       eiji_hl_name = 'LineNr',
       hira_hl_name = 'String',
       kata_hl_name = 'Todo',
+      hankata_hl_name = 'Special',
     }
 <
 ==============================================================================
@@ -46,9 +48,13 @@ hira_hl_name                           *skkeleton-indicator-config-hira_hl_name*
         (デフォルト 'skkeleton_indicator_hira')
         ひらがなモードで表示されるハイライトグループです。
 
-kata_hl_name                           *skkeleton-indicator-config-hira_hl_name*
+kata_hl_name                           *skkeleton-indicator-config-kata_hl_name*
         (デフォルト 'skkeleton_indicator_kata')
         カタカナモードで表示されるハイライトグループです。
+
+hankata_hl_name                     *skkeleton-indicator-config-hankata_hl_name*
+        (デフォルト 'skkeleton_indicator_hankata')
+        半角カタカナモードで表示されるハイライトグループです。
 
 eiji_text                                 *skkeleton-indicator-config-eiji_text*
         (デフォルト '英字')
@@ -58,9 +64,13 @@ hira_text                                 *skkeleton-indicator-config-hira_text*
         (デフォルト 'ひら')
         ひらがなモードで表示される文字列です。
 
-kata_text                                 *skkeleton-indicator-config-hira_text*
+kata_text                                 *skkeleton-indicator-config-kata_text*
         (デフォルト 'カタ')
         カタカナモードで表示される文字列です。
+
+hankata_text                           *skkeleton-indicator-config-hankata_text*
+        (デフォルト 'カタ')
+        半角カタカナモードで表示される文字列です。
 
 fade_out_ms                                    *skkeleton_indicator_fade_out_ms*
         (デフォルト 3000)

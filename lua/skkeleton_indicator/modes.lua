@@ -20,13 +20,18 @@ function M.new(ns, opts)
       hl = {fg = 'black', bg = 'yellow', bold = true},
       text = opts.kata_text,
     },
+    hankata = {
+      hl_name = opts.module_name..'_hankata',
+      hl = {fg = 'black', bg = 'magenta', bold = true},
+      text = opts.hankata_text,
+    },
   }, {__index = M})
 
   api._set_hl_ns(ns)
   -- opts.eiji_hl_name
   -- opts.hira_hl_name
   -- opts.kata_hl_name
-  for _, v in ipairs{'eiji', 'hira', 'kata'} do
+  for _, v in ipairs{'eiji', 'hira', 'kata', 'hankata'} do
     local mode = self[v]
     local hl_name = opts[v..'_hl_name']
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)
@@ -45,8 +50,10 @@ function M:detect()
     return self.eiji
   elseif m == 'hira' then
     return self.hira
+  elseif m == 'kata' then
+    return self.kata
   end
-  return self.kata
+  return self.hankata
 end
 
 return M
