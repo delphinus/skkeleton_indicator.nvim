@@ -78,7 +78,7 @@ function M:update(event)
   local function update()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
-    -- here is the Insert mode.
+    -- it is in the Insert mode.
     if not self.modes:is_insert() then return end
 
     if event == 'enable-post' then
