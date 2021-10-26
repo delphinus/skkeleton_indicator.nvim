@@ -28,6 +28,7 @@ function M.new(opts)
     {'User', 'skkeleton-disable-post', self:method('update', 'disable-post')},
     {'User', 'skkeleton-enable-post', self:method('update', 'enable-post')},
   }
+  return self
 end
 
 function M:is_disabled()
