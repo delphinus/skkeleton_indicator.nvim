@@ -69,7 +69,7 @@ kataText                                   *skkeleton-indicator-config-kataText*
         カタカナモードで表示される文字列です。
 
 hankataText                             *skkeleton-indicator-config-hankataText*
-        (デフォルト 'カタ')
+        (デフォルト '半ｶﾀ')
         半角カタカナモードで表示される文字列です。
 
 fadeOutMs                                 *skkeleton-indicator-config-fadeOutMs*
