@@ -1,4 +1,4 @@
-return {
+local M = {
   fn = vim.fn,
   api = setmetatable({
     _cache = {},
@@ -11,3 +11,17 @@ return {
     end,
   }),
 }
+
+function M.snake_case(str)
+  return str:gsub('[A-Z]?[a-z]+', function(part)
+    return part:match'^[A-Z]' and '_'..part:lower() or part:lower()
+  end)
+end
+
+function M.snake_case_dict(opts)
+  local dict = {}
+  for k, v in pairs(opts) do dict[M.snake_case(k)] = v end
+  return dict
+end
+
+return M

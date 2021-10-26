@@ -10,27 +10,16 @@ local M = {
 }
 
 function M.new(opts)
-  local ns = api.create_namespace(opts.moduleName)
-  local modes = Modes.new{
-    ns = ns,
-    module_name = opts.moduleName,
-    eiji_hl_name = opts.eijiHlName,
-    hira_hl_name = opts.hiraHlName,
-    kata_hl_name = opts.kataHlName,
-    hankata_hl_name = opts.hankataHlName,
-    eiji_text = opts.eijiText,
-    hira_text = opts.hiraText,
-    kata_text = opts.kataText,
-    hankata_text = opts.hankataText,
-  }
+  opts.ns = api.create_namespace(opts.module_name)
+  local modes = Modes.new(opts)
   local self = setmetatable({
-    ns = ns,
+    ns = opts.ns,
     modes = modes,
-    fade_out_ms = opts.fadeOutMs,
-    ignore_ft = opts.ignoreFt,
-    buf_filter = opts.bufFilter,
+    fade_out_ms = opts.fade_out_ms,
+    ignore_ft = opts.ignore_ft,
+    buf_filter = opts.buf_filter,
   }, {__index = M})
-  Autocmd.new(opts.moduleName):add{
+  Autocmd.new(opts.module_name):add{
     {'InsertEnter', '*', self:method'open'},
     {'InsertLeave', '*', self:method'close'},
     {'CursorMovedI', '*', self:method'move'},
