@@ -16,6 +16,7 @@ function M.setup(opts)
         hiraText = 'ひら',
         kataText = 'カタ',
         hankataText = '半ｶﾀ',
+        alwaysShown = true,
         fadeOutMs = 3000,
         ignoreFt = {},
         bufFilter = function() return true end,

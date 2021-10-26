@@ -72,6 +72,12 @@ hankataText                             *skkeleton-indicator-config-hankataText*
         (デフォルト '半ｶﾀ')
         半角カタカナモードで表示される文字列です。
 
+alwaysShown
+        (デフォルト true)
+        値が true の場合、インサートモードでは常にインジケータが表示されます。
+        false の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータ
+        が表示されなくなります)。
+
 fadeOutMs                                 *skkeleton-indicator-config-fadeOutMs*
         (デフォルト 3000)
         インジケータが消えるまでの時間です。ミリ秒で指定します。

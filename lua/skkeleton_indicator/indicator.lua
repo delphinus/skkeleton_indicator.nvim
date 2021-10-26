@@ -11,25 +11,30 @@ local M = {
 
 function M.new(opts)
   opts.ns = api.create_namespace(opts.module_name)
-  local modes = Modes.new(opts)
   local self = setmetatable({
     ns = opts.ns,
-    modes = modes,
+    modes = Modes.new(opts),
+    always_shown = opts.always_shown,
     fade_out_ms = opts.fade_out_ms,
     ignore_ft = opts.ignore_ft,
     buf_filter = opts.buf_filter,
+    is_skkeleton_loaded = false,
   }, {__index = M})
   Autocmd.new(opts.module_name):add{
     {'InsertEnter', '*', self:method'open'},
     {'InsertLeave', '*', self:method'close'},
     {'CursorMovedI', '*', self:method'move'},
-    {'User', 'skkeleton-mode-changed', self:method'update'},
-    {'User', 'skkeleton-disable-post', self:method'update'},
-    {'User', 'skkeleton-enable-post', self:method'update'},
+    {'User', 'skkeleton-mode-changed', self:method('update', 'mode-changed')},
+    {'User', 'skkeleton-disable-post', self:method('update', 'disable-post')},
+    {'User', 'skkeleton-enable-post', self:method('update', 'enable-post')},
   }
 end
 
 function M:is_disabled()
+  if not self.always_shown and
+    (not self.is_skkeleton_loaded or not fn['skkeleton#is_enabled']()) then
+    return true
+  end
   local buf = api.get_current_buf()
   local current_ft = api.buf_get_option(buf, 'filetype')
   for _, ft in ipairs(self.ignore_ft) do
@@ -38,7 +43,10 @@ function M:is_disabled()
   return not self.buf_filter(buf)
 end
 
-function M:method(name) return function() self[name](self) end end
+function M:method(name, ...)
+  local arg = {...}
+  return function() self[name](self, unpack(arg)) end
+end
 
 function M:set_text(buf)
   local mode = self.modes:detect()
@@ -65,12 +73,19 @@ function M:open()
   })
 end
 
-function M:update()
+function M:update(event)
   local function update()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
     -- here is the Insert mode.
     if not self.modes:is_insert() then return end
+
+    if event == 'enable-post' then
+      self.is_skkeleton_loaded = true
+    elseif event == 'disable-post' and not self.always_shown then
+      self:close()
+      return
+    end
 
     if self.timer then
       local buf = api.win_get_buf(self.winid)
