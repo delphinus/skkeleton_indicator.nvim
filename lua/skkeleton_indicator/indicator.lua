@@ -75,7 +75,7 @@ function M:open()
 end
 
 function M:update(event)
-  local function update()
+  local function update(is_fast_event)
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
     -- it is in the Insert mode.
@@ -84,7 +84,7 @@ function M:update(event)
     if event == 'enable-post' then
       self.is_skkeleton_loaded = true
     elseif event == 'disable-post' and not self.always_shown then
-      self:close()
+      self:close(is_fast_event)
       return
     end
 
@@ -96,7 +96,7 @@ function M:update(event)
     end
   end
   if vim.in_fast_event() then
-    update()
+    update(true)
   else
     vim.schedule(update)
   end
@@ -111,17 +111,25 @@ function M:move()
   })
 end
 
-function M:close()
+function M:close(is_fast_event)
   if not self.timer then return end
   fn.timer_stop(self.timer)
   self.timer = nil
-
   if self.winid == 0 then return end
-  local buf = api.win_get_buf(self.winid)
-  api.win_close(self.winid, false)
-  api.buf_clear_namespace(buf, self.ns, 0, -1)
-  api.buf_delete(buf, {force = true})
-  self.winid = 0
+
+  local function close()
+    local buf = api.win_get_buf(self.winid)
+    api.win_close(self.winid, false)
+    api.buf_clear_namespace(buf, self.ns, 0, -1)
+    api.buf_delete(buf, {force = true})
+    self.winid = 0
+  end
+
+  if vim.in_fast_event() or is_fast_event then
+    close()
+  else
+    vim.schedule(close)
+  end
 end
 
 return M
