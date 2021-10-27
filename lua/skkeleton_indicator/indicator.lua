@@ -6,7 +6,7 @@ local Modes = require'skkeleton_indicator.modes'
 local M = {
   funcs = {},
   timer = nil,
-  winid = 0,
+  winid = {},
 }
 
 function M.new(opts)
@@ -62,7 +62,7 @@ function M:open()
   if self.timer or self:is_disabled() then return end
   local buf = api.create_buf(false, true)
   self:set_text(buf)
-  self.winid = api.open_win(buf, false, {
+  local winid = api.open_win(buf, false, {
     style = 'minimal',
     relative = 'cursor',
     row = 1,
@@ -72,6 +72,7 @@ function M:open()
     focusable = false,
     noautocmd = true,
   })
+  table.insert(self.winid, 1, winid)
 end
 
 function M:update(event)
@@ -89,7 +90,7 @@ function M:update(event)
     end
 
     if self.timer then
-      local buf = api.win_get_buf(self.winid)
+      local buf = api.win_get_buf(self.winid[1])
       self:set_text(buf)
     else
       self:open()
@@ -104,7 +105,7 @@ end
 
 function M:move()
   if not self.timer then return end
-  api.win_set_config(self.winid, {
+  api.win_set_config(self.winid[1], {
     relative = 'cursor',
     row = 1,
     col = 1,
@@ -115,20 +116,23 @@ function M:close(is_fast_event)
   if not self.timer then return end
   fn.timer_stop(self.timer)
   self.timer = nil
-  if self.winid == 0 then return end
+  if #self.winid == 0 then return end
 
-  local function close()
-    local buf = api.win_get_buf(self.winid)
-    api.win_close(self.winid, false)
+  local function close(winid)
+    local buf = api.win_get_buf(winid)
+    api.win_close(winid, false)
     api.buf_clear_namespace(buf, self.ns, 0, -1)
     api.buf_delete(buf, {force = true})
-    self.winid = 0
   end
 
-  if vim.in_fast_event() or is_fast_event then
-    close()
-  else
-    vim.schedule(close)
+  for i = #self.winid, 1, -1 do
+    local winid = self.winid[i]
+    if vim.in_fast_event() or is_fast_event then
+      close(winid)
+    else
+      vim.schedule(function() close(winid) end)
+    end
+    table.remove(self.winid)
   end
 end
 
