@@ -120,7 +120,7 @@ function M:close(is_fast_event)
 
   local function close(winid)
     local buf = api.win_get_buf(winid)
-    api.win_close(winid, false)
+    api.win_close(winid, true)
     api.buf_clear_namespace(buf, self.ns, 0, -1)
     api.buf_delete(buf, {force = true})
   end
