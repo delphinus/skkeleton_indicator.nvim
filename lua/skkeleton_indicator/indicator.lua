@@ -76,16 +76,16 @@ function M:open()
 end
 
 function M:update(event)
-  -- update() will be called in InsertLeave because skkeleton invokes the
-  -- skkeleton-mode-changed event. So here it should checks mode() to confirm
-  -- it is in the Insert mode.
-  if not self.modes:is_insert() then return end
+  local function update(is_fast_event)
+    -- update() will be called in InsertLeave because skkeleton invokes the
+    -- skkeleton-mode-changed event. So here it should checks mode() to confirm
+    -- it is in the Insert mode.
+    if not self.modes:is_insert() then return end
 
-  vim.schedule(function()
     if event == 'enable-post' then
       self.is_skkeleton_loaded = true
     elseif event == 'disable-post' and not self.always_shown then
-      self:close()
+      self:close(is_fast_event)
       return
     end
 
@@ -95,7 +95,12 @@ function M:update(event)
     else
       self:open()
     end
-  end)
+  end
+  if vim.in_fast_event() then
+    update(true)
+  else
+    vim.schedule(update)
+  end
 end
 
 function M:move()
@@ -107,22 +112,28 @@ function M:move()
   })
 end
 
-function M:close()
+function M:close(is_fast_event)
   if not self.timer then return end
   fn.timer_stop(self.timer)
   self.timer = nil
   if #self.winid == 0 then return end
 
-  vim.schedule(function()
-    for i = #self.winid, 1, -1 do
-      local winid = self.winid[i]
-      local buf = api.win_get_buf(winid)
-      api.win_close(winid, true)
-      api.buf_clear_namespace(buf, self.ns, 0, -1)
-      api.buf_delete(buf, {force = true})
-      table.remove(self.winid)
+  local function close(winid)
+    local buf = api.win_get_buf(winid)
+    api.win_close(winid, true)
+    api.buf_clear_namespace(buf, self.ns, 0, -1)
+    api.buf_delete(buf, {force = true})
+  end
+
+  for i = #self.winid, 1, -1 do
+    local winid = self.winid[i]
+    if vim.in_fast_event() or is_fast_event then
+      close(winid)
+    else
+      vim.schedule(function() close(winid) end)
     end
-  end)
+    table.remove(self.winid)
+  end
 end
 
 return M
