@@ -25,6 +25,11 @@ function M.new(opts)
       hl = {fg = 'black', bg = 'magenta', bold = true},
       text = opts.hankata_text,
     },
+    zenkaku = {
+      hl_name = opts.module_name..'_zenkaku',
+      hl = {fg = 'black', bg = 'cyan', bold = true},
+      text = opts.zenkaku_text,
+    },
     width = 0,
   }, {__index = M})
 
@@ -33,7 +38,7 @@ function M.new(opts)
   -- opts.hira_hl_name
   -- opts.kata_hl_name
   -- opts.hankata_hl_name
-  for _, v in ipairs{'eiji', 'hira', 'kata', 'hankata'} do
+  for _, v in ipairs{'eiji', 'hira', 'kata', 'hankata', 'zenkaku'} do
     local mode = self[v]
     local w = fn.strdisplaywidth(mode.text)
     if w > self.width then self.width = w end
@@ -56,6 +61,8 @@ function M:detect()
     return self.hira
   elseif m == 'kata' then
     return self.kata
+  elseif m == 'zenkaku' then
+    return self.zenkaku
   end
   return self.hankata
 end
