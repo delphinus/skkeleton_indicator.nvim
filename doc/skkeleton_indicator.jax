@@ -25,6 +25,7 @@ USAGE                                                *skkeleton-indicator-usage*
       hi SkkeletonIndicatorHira guifg=#2e3440 guibg=#a3be8c gui=bold
       hi SkkeletonIndicatorKata guifg=#2e3440 guibg=#ebcb8b gui=bold
       hi SkkeletonIndicatorHankata guifg=#2e3440 guibg=#b48ead gui=bold
+      hi SkkeletonIndicatorZenkaku guifg=#2e3440 guibg=#88c0d0 gui=bold
     ]], false)
     require'skkeleton_indicator'.setup{}
 <
@@ -35,25 +36,30 @@ USAGE                                                *skkeleton-indicator-usage*
       hiraHlName = 'String',
       kataHlName = 'Todo',
       hankataHlName = 'Special',
+      zenkakuHlName = 'LineNr',
     }
 <
 ==============================================================================
 CONFIG                                              *skkeleton-indicator-config*
 
 eijiHlName                               *skkeleton-indicator-config-eijiHlName*
-        (デフォルト 'skkeleton_indicator_eiji')
+        (デフォルト 'SkkeletonIndicatorEiji')
         直接入力モードで表示される文字列に利用されるハイライトグループです。
 
 hiraHlName                               *skkeleton-indicator-config-hiraHlName*
-        (デフォルト 'skkeleton_indicator_hira')
+        (デフォルト 'SkkeletonIndicatorHira')
         ひらがなモードで表示されるハイライトグループです。
 
 kataHlName                               *skkeleton-indicator-config-kataHlName*
-        (デフォルト 'skkeleton_indicator_kata')
+        (デフォルト 'SkkeletonIndicatorKata')
         カタカナモードで表示されるハイライトグループです。
 
 hankataHlName                         *skkeleton-indicator-config-hankataHlName*
-        (デフォルト 'skkeleton_indicator_hankata')
+        (デフォルト 'SkkeletonIndicatorHankata')
+        半角カタカナモードで表示されるハイライトグループです。
+
+zenkakuHlName                         *skkeleton-indicator-config-zenkakuHlName*
+        (デフォルト 'SkkeletonIndicatorZenkaku')
         半角カタカナモードで表示されるハイライトグループです。
 
 eijiText                                   *skkeleton-indicator-config-eijiText*
@@ -70,6 +76,10 @@ kataText                                   *skkeleton-indicator-config-kataText*
 
 hankataText                             *skkeleton-indicator-config-hankataText*
         (デフォルト '半ｶﾀ')
+        半角カタカナモードで表示される文字列です。
+
+zenkakuText                             *skkeleton-indicator-config-zenkakuText*
+        (デフォルト '全英')
         半角カタカナモードで表示される文字列です。
 
 alwaysShown
