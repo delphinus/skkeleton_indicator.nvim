@@ -9,7 +9,7 @@ function M.new(module_name)
 end
 
 function M:add(defs)
-  local cmds = {'augroup '..self.module_name}
+  local cmds = {'augroup '..self.module_name, 'autocmd!'}
   for _, def in ipairs(defs) do
     table.insert(self.funcs, def[3])
     local cmd = ([[lua require'%s.autocmd'.funcs[%d]()]]):format(
