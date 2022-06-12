@@ -1,5 +1,6 @@
 local api = require("skkeleton_indicator.util").api
 local fn = require("skkeleton_indicator.util").fn
+local uv = require("skkeleton_indicator.util").uv
 local Modes = require "skkeleton_indicator.modes"
 
 local M = {
@@ -63,14 +64,12 @@ function M:set_text(buf)
   api.buf_set_lines(buf, 0, 0, false, { mode.text })
   api.buf_clear_namespace(buf, self.ns, 0, -1)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
-  if self.timer then
-    fn.timer_stop(self.timer)
-  end
-  self.timer = fn.timer_start(self.fade_out_ms, self:method "close")
+  self:timer_stop()
+  self.timer = vim.defer_fn(self:method "close", self.fade_out_ms)
 end
 
 function M:open()
-  if self.timer or self:is_disabled() then
+  if self:is_timer_active() or self:is_disabled() then
     return
   end
   local buf = api.create_buf(false, true)
@@ -104,7 +103,7 @@ function M:update(event)
       return
     end
 
-    if self.timer then
+    if self:is_timer_active() then
       local buf = api.win_get_buf(self.winid[1])
       self:set_text(buf)
     else
@@ -120,7 +119,7 @@ function M:update(event)
 end
 
 function M:move()
-  if not self.timer then
+  if not self:is_timer_active() then
     return
   end
   api.win_set_config(self.winid[1], {
@@ -131,11 +130,10 @@ function M:move()
 end
 
 function M:close(is_fast_event)
-  if not self.timer then
+  if not self:is_timer_active() then
     return
   end
-  fn.timer_stop(self.timer)
-  self.timer = nil
+  self:timer_stop()
   if #self.winid == 0 then
     return
   end
@@ -157,6 +155,17 @@ function M:close(is_fast_event)
       end)
     end
     table.remove(self.winid)
+  end
+end
+
+function M:is_timer_active()
+  return self.timer and uv.is_active(self.timer)
+end
+
+function M:timer_stop()
+  if self:is_timer_active() then
+    self.timer:stop()
+    self.timer:close()
   end
 end
 
