@@ -1,10 +1,8 @@
 local api = require("skkeleton_indicator.util").api
 local fn = require("skkeleton_indicator.util").fn
-local Autocmd = require "skkeleton_indicator.autocmd"
 local Modes = require "skkeleton_indicator.modes"
 
 local M = {
-  funcs = {},
   timer = nil,
   winid = {},
 }
@@ -20,14 +18,22 @@ function M.new(opts)
     buf_filter = opts.buf_filter,
     is_skkeleton_loaded = false,
   }, { __index = M })
-  Autocmd.new(opts.module_name):add {
-    { "InsertEnter", "*", self:method "open" },
-    { "InsertLeave", "*", self:method "close" },
-    { "CursorMovedI", "*", self:method "move" },
-    { "User", "skkeleton-mode-changed", self:method("update", "mode-changed") },
-    { "User", "skkeleton-disable-post", self:method("update", "disable-post") },
-    { "User", "skkeleton-enable-post", self:method("update", "enable-post") },
-  }
+  local group = api.create_augroup(opts.module_name, {})
+  api.create_autocmd("InsertEnter", { group = group, callback = self:method "open" })
+  api.create_autocmd("InsertLeave", { group = group, callback = self:method "close" })
+  api.create_autocmd("CursorMovedI", { group = group, callback = self:method "move" })
+  api.create_autocmd(
+    "User",
+    { group = group, pattern = "skkeleton-mode-changed", callback = self:method("update", "mode-changed") }
+  )
+  api.create_autocmd(
+    "User",
+    { group = group, pattern = "skkeleton-disable-post", callback = self:method("update", "disable-post") }
+  )
+  api.create_autocmd(
+    "User",
+    { group = group, pattern = "skkeleton-enable-post", callback = self:method("update", "enable-post") }
+  )
   return self
 end
 
