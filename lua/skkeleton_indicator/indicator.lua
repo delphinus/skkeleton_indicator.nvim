@@ -114,14 +114,13 @@ function M:update(event)
 end
 
 function M:move()
-  if not self.timer then
-    return
+  if self.timer and self.winid[1] then
+    api.win_set_config(self.winid[1], {
+      relative = "cursor",
+      row = 1,
+      col = 1,
+    })
   end
-  api.win_set_config(self.winid[1], {
-    relative = "cursor",
-    row = 1,
-    col = 1,
-  })
 end
 
 function M:close(is_fast_event)
