@@ -33,7 +33,6 @@ function M.new(opts)
     width = 0,
   }, { __index = M })
 
-  api._set_hl_ns(opts.ns)
   -- opts.eiji_hl_name
   -- opts.hira_hl_name
   -- opts.kata_hl_name
@@ -49,7 +48,7 @@ function M.new(opts)
     if ok then
       mode.hl = hl
     end
-    api.set_hl(opts.ns, mode.hl_name, mode.hl)
+    api.set_hl(0, mode.hl_name, mode.hl)
   end
 
   return self
