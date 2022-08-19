@@ -14,7 +14,7 @@ local M = {
 
 function M.snake_case(str)
   return str:gsub("[A-Z]?[a-z]+", function(part)
-    return part:match("^[A-Z]") and "_" .. part:lower() or part:lower()
+    return part:match "^[A-Z]" and "_" .. part:lower() or part:lower()
   end)
 end
 

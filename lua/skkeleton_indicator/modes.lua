@@ -38,7 +38,7 @@ function M.new(opts)
   -- opts.hira_hl_name
   -- opts.kata_hl_name
   -- opts.hankata_hl_name
-  for _, v in ipairs({ "eiji", "hira", "kata", "hankata", "zenkaku" }) do
+  for _, v in ipairs { "eiji", "hira", "kata", "hankata", "zenkaku" } do
     local mode = self[v]
     local w = fn.strdisplaywidth(mode.text)
     if w > self.width then
@@ -56,7 +56,7 @@ function M.new(opts)
 end
 
 function M:is_insert()
-  return fn.mode():find("i")
+  return fn.mode():find "i"
 end
 
 function M:detect()

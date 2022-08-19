@@ -2,11 +2,11 @@ local snake_case = require("skkeleton_indicator.util").snake_case
 local snake_case_dict = require("skkeleton_indicator.util").snake_case_dict
 
 describe("snake_case", function()
-  for _, c in ipairs({
+  for _, c in ipairs {
     { case = "all lower", str = "abcdefg", expected = "abcdefg" },
     { case = "2 parts", str = "abcdEfg", expected = "abcd_efg" },
     { case = "3 parts", str = "aBcdEfg", expected = "a_bcd_efg" },
-  }) do
+  } do
     it(c.case, function()
       assert.equals(c.expected, snake_case(c.str))
     end)
@@ -31,7 +31,7 @@ describe("snake_case_dict", function()
         -- same() cannot detect function to be the same.
         --buf_filter = function() return true end,
       },
-      snake_case_dict({
+      snake_case_dict {
         moduleName = "skkeleton_indicator",
         eijiHlName = "SkkeletonIndicatorEiji",
         hiraHlName = "SkkeletonIndicatorHira",
@@ -44,7 +44,7 @@ describe("snake_case_dict", function()
         fadeOutMs = 3000,
         ignoreFt = {},
         --bufFilter = function() return true end,
-      })
+      }
     )
   end)
 end)

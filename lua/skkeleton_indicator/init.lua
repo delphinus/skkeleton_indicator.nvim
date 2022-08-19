@@ -1,4 +1,4 @@
-local Indicator = require("skkeleton_indicator.indicator")
+local Indicator = require "skkeleton_indicator.indicator"
 local snake_case_dict = require("skkeleton_indicator.util").snake_case_dict
 
 local M = {}
