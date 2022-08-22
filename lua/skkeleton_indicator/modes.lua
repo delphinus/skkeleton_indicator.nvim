@@ -30,6 +30,7 @@ function M.new(opts)
       hl = { fg = "black", bg = "cyan", bold = true },
       text = opts.zenkaku_text,
     },
+    modes = { "eiji", "hira", "kata", "hankata", "zenkaku" },
     width = 0,
   }, { __index = M })
 
@@ -37,7 +38,8 @@ function M.new(opts)
   -- opts.hira_hl_name
   -- opts.kata_hl_name
   -- opts.hankata_hl_name
-  for _, v in ipairs { "eiji", "hira", "kata", "hankata", "zenkaku" } do
+  -- opts.zenkaku_hl_name
+  for _, v in ipairs(self.modes) do
     local mode = self[v]
     local w = fn.strdisplaywidth(mode.text)
     if w > self.width then
@@ -48,10 +50,24 @@ function M.new(opts)
     if ok then
       mode.hl = hl
     end
-    api.set_hl(0, mode.hl_name, mode.hl)
   end
 
+  api.create_autocmd("ColorScheme", {
+    group = api.create_augroup(opts.module_name .. "_color", {}),
+    callback = function()
+      self:set_hl()
+    end,
+  })
+  self:set_hl()
+
   return self
+end
+
+function M:set_hl()
+  for _, v in ipairs(self.modes) do
+    local mode = self[v]
+    api.set_hl(0, mode.hl_name, mode.hl)
+  end
 end
 
 function M:is_insert()
