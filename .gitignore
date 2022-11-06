@@ -95,4 +95,5 @@ luac.out
 *.hex
 
 
-
+### custom rules
+doc/tags-ja
