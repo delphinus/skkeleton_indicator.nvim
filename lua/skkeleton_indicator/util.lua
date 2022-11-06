@@ -1,4 +1,5 @@
 local M = {
+  uv = vim.loop,
   fn = vim.fn,
   api = setmetatable({
     _cache = {},
