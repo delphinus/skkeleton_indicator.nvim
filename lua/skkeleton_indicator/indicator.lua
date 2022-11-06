@@ -59,7 +59,9 @@ function M:set_text(buf)
   api.buf_clear_namespace(buf, self.ns, 0, -1)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
   self.timer:stop()
-  self.timer:start(self.fade_out_ms, 0, self:method "close")
+  if self.fade_out_ms > 0 then
+    self.timer:start(self.fade_out_ms, 0, self:method "close")
+  end
 end
 
 function M:open()
