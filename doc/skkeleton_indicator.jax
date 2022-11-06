@@ -90,7 +90,8 @@ alwaysShown
 
 fadeOutMs                                 *skkeleton-indicator-config-fadeOutMs*
         (デフォルト 3000)
-        インジケータが消えるまでの時間です。ミリ秒で指定します。
+        インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場
+        合、挿入モードの時は常に表示されるようになります。
 
 ignoreFt                                   *skkeleton-indicator-config-ignoreFt*
         (デフォルト {})

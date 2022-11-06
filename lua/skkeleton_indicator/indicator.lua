@@ -1,11 +1,12 @@
 local api = require("skkeleton_indicator.util").api
 local fn = require("skkeleton_indicator.util").fn
+local uv = require("skkeleton_indicator.util").uv
 local Autocmd = require "skkeleton_indicator.autocmd"
 local Modes = require "skkeleton_indicator.modes"
 
 local M = {
   funcs = {},
-  timer = nil,
+  timer = uv.new_timer(),
   winid = {},
 }
 
@@ -57,14 +58,14 @@ function M:set_text(buf)
   api.buf_set_lines(buf, 0, 0, false, { mode.text })
   api.buf_clear_namespace(buf, self.ns, 0, -1)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
-  if self.timer then
-    fn.timer_stop(self.timer)
+  self.timer:stop()
+  if self.fade_out_ms > 0 then
+    self.timer:start(self.fade_out_ms, 0, self:method "close")
   end
-  self.timer = fn.timer_start(self.fade_out_ms, self:method "close")
 end
 
 function M:open()
-  if self.timer or self:is_disabled() then
+  if self.timer:get_due_in() > 0 or self:is_disabled() then
     return
   end
   local buf = api.create_buf(false, true)
@@ -83,7 +84,7 @@ function M:open()
 end
 
 function M:update(event)
-  local function update(is_fast_event)
+  local function update()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
     -- it is in the Insert mode.
@@ -94,11 +95,11 @@ function M:update(event)
     if event == "enable-post" then
       self.is_skkeleton_loaded = true
     elseif event == "disable-post" and not self.always_shown then
-      self:close(is_fast_event)
+      self:close()
       return
     end
 
-    if self.timer then
+    if self.timer:get_due_in() > 0 then
       local buf = api.win_get_buf(self.winid[1])
       self:set_text(buf)
     else
@@ -106,15 +107,11 @@ function M:update(event)
     end
   end
 
-  if vim.in_fast_event() then
-    update(true)
-  else
-    vim.schedule(update)
-  end
+  vim.schedule(update)
 end
 
 function M:move()
-  if self.timer and self.winid[1] then
+  if self.timer:get_due_in() > 0 and self.winid[1] then
     api.win_set_config(self.winid[1], {
       relative = "cursor",
       row = 1,
@@ -123,12 +120,8 @@ function M:move()
   end
 end
 
-function M:close(is_fast_event)
-  if not self.timer then
-    return
-  end
-  fn.timer_stop(self.timer)
-  self.timer = nil
+function M:close()
+  self.timer:stop()
   if #self.winid == 0 then
     return
   end
@@ -142,13 +135,9 @@ function M:close(is_fast_event)
 
   for i = #self.winid, 1, -1 do
     local winid = self.winid[i]
-    if vim.in_fast_event() or is_fast_event then
+    vim.schedule(function()
       close(winid)
-    else
-      vim.schedule(function()
-        close(winid)
-      end)
-    end
+    end)
     table.remove(self.winid)
   end
 end
