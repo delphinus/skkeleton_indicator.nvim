@@ -65,7 +65,7 @@ function M:set_text(buf)
 end
 
 function M:open()
-  if self.timer:get_due_in() > 0 or self:is_disabled() then
+  if self:is_opened() or self:is_disabled() then
     return
   end
   local buf = api.create_buf(false, true)
@@ -99,7 +99,7 @@ function M:update(event)
       return
     end
 
-    if self.timer:get_due_in() > 0 then
+    if self:is_opened() then
       local buf = api.win_get_buf(self.winid[1])
       self:set_text(buf)
     else
@@ -111,7 +111,7 @@ function M:update(event)
 end
 
 function M:move()
-  if self.timer:get_due_in() > 0 and self.winid[1] then
+  if self:is_opened() and self.winid[1] then
     api.win_set_config(self.winid[1], {
       relative = "cursor",
       row = 1,
@@ -140,6 +140,10 @@ function M:close()
     end)
     table.remove(self.winid)
   end
+end
+
+function M:is_opened()
+  return #self.winid > 0
 end
 
 return M
