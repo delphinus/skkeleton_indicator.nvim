@@ -4,23 +4,48 @@ local uv = require("skkeleton_indicator.util").uv
 local Autocmd = require "skkeleton_indicator.autocmd"
 local Modes = require "skkeleton_indicator.modes"
 
-local M = {
-  funcs = {},
+---@class skkeleton_indicator.indicator.Opts
+---@field module_name string
+---@field eiji_hl_name string
+---@field hira_hl_name string
+---@field kata_hl_name string
+---@field hankata_hl_name string
+---@field zenkaku_hl_name string
+---@field eiji_text string
+---@field hira_text string
+---@field kata_text string
+---@field hankata_text string
+---@field zenkaku_text string
+---@field always_shown boolean
+---@field fade_out_ms integer
+---@field ignore_ft string[]
+---@field buf_filter fun(buf: integer): boolean
+
+---@class skkeleton_indicator.indicator.Indicator
+---@field ns integer
+---@field modes skkeleton_indicator.modes.Modes
+---@field opts skkeleton_indicator.indicator.Opts
+---@field is_skkeleton_loaded boolean
+---@field winid integer[]
+local Indicator = {
   timer = uv.new_timer(),
   winid = {},
 }
 
-function M.new(opts)
-  opts.ns = api.create_namespace(opts.module_name)
+---@return skkeleton_indicator.indicator.Indicator
+function Indicator.new()
   local self = setmetatable({
-    ns = opts.ns,
-    modes = Modes.new(opts),
-    always_shown = opts.always_shown,
-    fade_out_ms = opts.fade_out_ms,
-    ignore_ft = opts.ignore_ft,
-    buf_filter = opts.buf_filter,
     is_skkeleton_loaded = false,
-  }, { __index = M })
+  }, { __index = Indicator })
+  return self
+end
+
+---@param opts skkeleton_indicator.indicator.Opts
+---@return nil
+function Indicator:setup(opts)
+  self.opts = opts
+  self.ns = api.create_namespace(opts.module_name)
+  self.modes = Modes.new(opts)
   Autocmd.new(opts.module_name):add {
     { "InsertEnter", "*", self:method "open" },
     { "InsertLeave", "*", self:method "close" },
@@ -29,47 +54,58 @@ function M.new(opts)
     { "User", "skkeleton-disable-post", self:method("update", "disable-post") },
     { "User", "skkeleton-enable-post", self:method("update", "enable-post") },
   }
-  return self
 end
 
-function M:is_disabled()
-  if not self.always_shown and (not self.is_skkeleton_loaded or not fn["skkeleton#is_enabled"]()) then
+---@return boolean
+function Indicator:is_disabled()
+  if not self.opts.always_shown and (not self.is_skkeleton_loaded or not fn["skkeleton#is_enabled"]()) then
     return true
   end
+  ---@type integer
   local buf = api.get_current_buf()
+  ---@type string
   local current_ft = api.buf_get_option(buf, "filetype")
-  for _, ft in ipairs(self.ignore_ft) do
+  for _, ft in ipairs(self.opts.ignore_ft) do
     if current_ft == ft then
       return true
     end
   end
-  return not self.buf_filter(buf)
+  return not self.opts.buf_filter(buf)
 end
 
-function M:method(name, ...)
+---@param name string
+---@param ... unknown
+---@return fun(): nil
+function Indicator:method(name, ...)
   local arg = { ... }
+  ---@return nil
   return function()
     self[name](self, unpack(arg))
   end
 end
 
-function M:set_text(buf)
+---@param buf integer
+---@return nil
+function Indicator:set_text(buf)
   local mode = self.modes:detect()
   api.buf_set_lines(buf, 0, 0, false, { mode.text })
   api.buf_clear_namespace(buf, self.ns, 0, -1)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
   self.timer:stop()
-  if self.fade_out_ms > 0 then
-    self.timer:start(self.fade_out_ms, 0, self:method "close")
+  if self.opts.fade_out_ms > 0 then
+    self.timer:start(self.opts.fade_out_ms, 0, self:method "close")
   end
 end
 
-function M:open()
+---@return nil
+function Indicator:open()
   if self:is_opened() or self:is_disabled() then
     return
   end
+  ---@type integer
   local buf = api.create_buf(false, true)
   self:set_text(buf)
+  ---@type integer
   local winid = api.open_win(buf, false, {
     style = "minimal",
     relative = "cursor",
@@ -83,7 +119,10 @@ function M:open()
   table.insert(self.winid, 1, winid)
 end
 
-function M:update(event)
+---@param event string
+---@return nil
+function Indicator:update(event)
+  ---@return nil
   local function update()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
@@ -94,12 +133,13 @@ function M:update(event)
 
     if event == "enable-post" then
       self.is_skkeleton_loaded = true
-    elseif event == "disable-post" and not self.always_shown then
+    elseif event == "disable-post" and not self.opts.always_shown then
       self:close()
       return
     end
 
     if self:is_opened() then
+      ---@type integer
       local buf = api.win_get_buf(self.winid[1])
       self:set_text(buf)
     else
@@ -110,7 +150,8 @@ function M:update(event)
   vim.schedule(update)
 end
 
-function M:move()
+---@return nil
+function Indicator:move()
   if self:is_opened() and self.winid[1] then
     api.win_set_config(self.winid[1], {
       relative = "cursor",
@@ -120,13 +161,17 @@ function M:move()
   end
 end
 
-function M:close()
+---@return nil
+function Indicator:close()
   self.timer:stop()
-  if #self.winid == 0 then
+  if not self:is_opened() then
     return
   end
 
+  ---@param winid integer
+  ---@return nil
   local function close(winid)
+    ---@type integer
     local buf = api.win_get_buf(winid)
     api.win_close(winid, true)
     api.buf_clear_namespace(buf, self.ns, 0, -1)
@@ -142,8 +187,9 @@ function M:close()
   end
 end
 
-function M:is_opened()
+---@return boolean
+function Indicator:is_opened()
   return #self.winid > 0
 end
 
-return M
+return Indicator

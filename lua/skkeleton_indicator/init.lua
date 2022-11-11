@@ -1,10 +1,13 @@
 local Indicator = require "skkeleton_indicator.indicator"
 local snake_case_dict = require("skkeleton_indicator.util").snake_case_dict
 
-local M = {}
+local indicator = Indicator.new()
+local skkeleton_indicator = {
+  instance = indicator,
+}
 
-function M.setup(opts)
-  M.instance = Indicator.new(snake_case_dict(vim.tbl_extend("keep", opts or {}, {
+function skkeleton_indicator.setup(opts)
+  indicator:setup(snake_case_dict(vim.tbl_extend("force", {
     moduleName = "skkeleton_indicator",
     eijiHlName = "SkkeletonIndicatorEiji",
     hiraHlName = "SkkeletonIndicatorHira",
@@ -19,10 +22,10 @@ function M.setup(opts)
     alwaysShown = true,
     fadeOutMs = 3000,
     ignoreFt = {},
-    bufFilter = function()
+    bufFilter = function(_)
       return true
     end,
-  })))
+  }, opts or {})))
 end
 
-return M
+return skkeleton_indicator
