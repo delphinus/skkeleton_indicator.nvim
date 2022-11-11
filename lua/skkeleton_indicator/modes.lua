@@ -1,9 +1,29 @@
 local api = require("skkeleton_indicator.util").api
 local fn = require("skkeleton_indicator.util").fn
 
-local M = {}
+---@class skkeleton_indicator.modes.Highlight
+---@field fg string
+---@field bg string
+---@field bold boolean
 
-function M.new(opts)
+---@class skkeleton_indicator.modes.Mode
+---@field hl_name string
+---@field text string
+---@field hl skkeleton_indicator.modes.Highlight
+
+---@class skkeleton_indicator.modes.Modes
+---@field eiji skkeleton_indicator.modes.Mode
+---@field hira skkeleton_indicator.modes.Mode
+---@field kata skkeleton_indicator.modes.Mode
+---@field hankata skkeleton_indicator.modes.Mode
+---@field zenkaku skkeleton_indicator.modes.Mode
+---@field modes string[]
+---@field width integer
+local Modes = {}
+
+---@param opts skkeleton_indicator.indicator.Opts
+---@return skkeleton_indicator.modes.Modes
+function Modes.new(opts)
   local self = setmetatable({
     eiji = {
       hl_name = opts.module_name .. "_eiji",
@@ -32,19 +52,16 @@ function M.new(opts)
     },
     modes = { "eiji", "hira", "kata", "hankata", "zenkaku" },
     width = 0,
-  }, { __index = M })
+  }, { __index = Modes })
 
-  -- opts.eiji_hl_name
-  -- opts.hira_hl_name
-  -- opts.kata_hl_name
-  -- opts.hankata_hl_name
-  -- opts.zenkaku_hl_name
   for _, v in ipairs(self.modes) do
+    ---@type skkeleton_indicator.modes.Mode
     local mode = self[v]
     local w = fn.strdisplaywidth(mode.text)
     if w > self.width then
       self.width = w
     end
+    ---@type string
     local hl_name = opts[v .. "_hl_name"]
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)
     if ok then
@@ -63,18 +80,21 @@ function M.new(opts)
   return self
 end
 
-function M:set_hl()
+function Modes:set_hl()
   for _, v in ipairs(self.modes) do
+    ---@type skkeleton_indicator.modes.Mode
     local mode = self[v]
     api.set_hl(0, mode.hl_name, mode.hl)
   end
 end
 
-function M:is_insert()
-  return fn.mode():find "i"
+---@return boolean
+function Modes:is_insert() -- luacheck: ignore 212
+  return fn.mode():find "i" and true or false
 end
 
-function M:detect()
+---@return skkeleton_indicator.modes.Mode
+function Modes:detect()
   local ok, m = pcall(fn["skkeleton#mode"])
   if not ok or m == "" then
     return self.eiji
@@ -88,4 +108,4 @@ function M:detect()
   return self.hankata
 end
 
-return M
+return Modes

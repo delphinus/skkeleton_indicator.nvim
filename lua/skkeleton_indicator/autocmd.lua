@@ -1,22 +1,24 @@
 local api = require("skkeleton_indicator.util").api
 
-local M = {
-  funcs = {},
-}
+---@class skkeleton_indicator.autocmd.Autocmd
+---@field group integer
+local Autocmd = {}
 
-function M.new(module_name)
-  return setmetatable({ module_name = module_name }, { __index = M })
+---@param module_name string
+---@return skkeleton_indicator.autocmd.Autocmd
+function Autocmd.new(module_name)
+  return setmetatable({ group = api.create_augroup(module_name, {}) }, { __index = Autocmd })
 end
 
-function M:add(defs)
-  local cmds = { "augroup " .. self.module_name, "autocmd!" }
+---@param defs table
+---@return nil
+function Autocmd:add(defs) -- luacheck: ignore 212
   for _, def in ipairs(defs) do
-    table.insert(self.funcs, def[3])
-    local cmd = ([[lua require'%s.autocmd'.funcs[%d]()]]):format(self.module_name, #self.funcs)
-    table.insert(cmds, ("autocmd %s %s %s"):format(def[1], def[2], cmd))
+    api.create_autocmd(def[1], {
+      pattern = def[2],
+      callback = def[3],
+    })
   end
-  table.insert(cmds, "augroup END")
-  api.exec(table.concat(cmds, "\n"), false)
 end
 
-return M
+return Autocmd
