@@ -98,8 +98,8 @@ ignoreFt                                   *skkeleton-indicator-config-ignoreFt*
         ファイルタイプを指定するとインジケータが表示されなくなります。
 
 bufFilter                                 *skkeleton-indicator-config-bufFilter*
-        (デフォルト function() return true end)
-        インジケータを表示するか決める関数です。true を返すと表示します。
-        ignore_ft のファイルタイプの後に評価されます。
+        (デフォルト function(_) return true end)
+        インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、
+        true を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
 
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
