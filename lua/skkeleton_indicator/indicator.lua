@@ -99,7 +99,7 @@ end
 
 ---@return nil
 function Indicator:open()
-  if self:is_opened() or self:is_disabled() then
+  if self:is_opened() or self:is_disabled() or self:is_in_cmdwin() then
     return
   end
   ---@type integer
@@ -190,6 +190,10 @@ end
 ---@return boolean
 function Indicator:is_opened()
   return #self.winid > 0
+end
+
+function Indicator:is_in_cmdwin()
+  return fn.getcmdwintype() ~= ""
 end
 
 return Indicator
