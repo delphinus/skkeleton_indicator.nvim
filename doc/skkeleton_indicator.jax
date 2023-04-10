@@ -1,25 +1,33 @@
-*skkeleton_indicator.txt*	Skkeleton の状態を示すインジケータ
+*skkeleton_indicator.txt*		    Skkeleton の状態を示すインジケータ
 
 Author: delphinus
 Licence: zlib
 
+CONTENTS
+
+Introduction		|skkeleton-indicator-introduction|
+Usage			|skkeleton-indicator-usage|
+Config			|skkeleton-indicator-config|
+Caveats			|skkeleton-indicator-caveats|
+
+
 ==============================================================================
-INTRODUCTION                                  *skkeleton-indicator-introduction*
+INTRODUCTION				      *skkeleton-indicator-introduction*
 
 *skkeleton_indicator* は |skkeleton| の状態をカーソルの側に表示します。
 
 NOTE: このプラグインは Neovim 専用です。
 
 ==============================================================================
-USAGE                                                *skkeleton-indicator-usage*
+USAGE						     *skkeleton-indicator-usage*
 
-プラグインを読み込んだ後に setup() 関数を呼び出してください。
->
+プラグインを読み込んだ後に `setup()` 関数を呼び出してください。
+>lua
     require'skkeleton_indicator'.setup{}
 <
-文字列が表示される際のハイライトを変える場合、setup() を呼ぶ前に定義してくださ
-い。
->
+文字列が表示される際のハイライトを変える場合、 `setup()` を呼ぶ前に定義してくだ
+さい。
+>lua
     vim.api.nvim_exec([[
       hi SkkeletonIndicatorEiji guifg=#88c0d0 guibg=#2e3440 gui=bold
       hi SkkeletonIndicatorHira guifg=#2e3440 guibg=#a3be8c gui=bold
@@ -29,8 +37,8 @@ USAGE                                                *skkeleton-indicator-usage*
     ]], false)
     require'skkeleton_indicator'.setup{}
 <
-既存のハイライトを使う場合はその名称を setup() を呼ぶ際に指定してください。
->
+既存のハイライトを使う場合はその名称を `setup()` を呼ぶ際に指定してください。
+>lua
     require'skkeleton_indicator'.setup{
       eijiHlName = 'LineNr',
       hiraHlName = 'String',
@@ -40,66 +48,72 @@ USAGE                                                *skkeleton-indicator-usage*
     }
 <
 ==============================================================================
-CONFIG                                              *skkeleton-indicator-config*
+CONFIG						    *skkeleton-indicator-config*
 
-eijiHlName                               *skkeleton-indicator-config-eijiHlName*
-        (デフォルト 'SkkeletonIndicatorEiji')
+eijiHlName				 *skkeleton-indicator-config-eijiHlName*
+        (`string`: デフォルト `'SkkeletonIndicatorEiji'`)
         直接入力モードで表示される文字列に利用されるハイライトグループです。
 
-hiraHlName                               *skkeleton-indicator-config-hiraHlName*
-        (デフォルト 'SkkeletonIndicatorHira')
+hiraHlName				 *skkeleton-indicator-config-hiraHlName*
+        (`string`: デフォルト `'SkkeletonIndicatorHira'``)
         ひらがなモードで表示されるハイライトグループです。
 
-kataHlName                               *skkeleton-indicator-config-kataHlName*
-        (デフォルト 'SkkeletonIndicatorKata')
+kataHlName				 *skkeleton-indicator-config-kataHlName*
+        (`string`: デフォルト `'SkkeletonIndicatorKata'`)
         カタカナモードで表示されるハイライトグループです。
 
-hankataHlName                         *skkeleton-indicator-config-hankataHlName*
-        (デフォルト 'SkkeletonIndicatorHankata')
+hankataHlName			      *skkeleton-indicator-config-hankataHlName*
+        (`string`: デフォルト `'SkkeletonIndicatorHankata'`)
         半角カタカナモードで表示されるハイライトグループです。
 
-zenkakuHlName                         *skkeleton-indicator-config-zenkakuHlName*
-        (デフォルト 'SkkeletonIndicatorZenkaku')
+zenkakuHlName			      *skkeleton-indicator-config-zenkakuHlName*
+        (`string`: デフォルト `'SkkeletonIndicatorZenkaku'`)
         半角カタカナモードで表示されるハイライトグループです。
 
-eijiText                                   *skkeleton-indicator-config-eijiText*
-        (デフォルト '英字')
+eijiText				   *skkeleton-indicator-config-eijiText*
+        (`string`: デフォルト `'英字'`)
         直接入力モードで表示される文字列です。
 
-hiraText                                   *skkeleton-indicator-config-hiraText*
-        (デフォルト 'ひら')
+hiraText				   *skkeleton-indicator-config-hiraText*
+        (`string`: デフォルト `'ひら'`)
         ひらがなモードで表示される文字列です。
 
-kataText                                   *skkeleton-indicator-config-kataText*
-        (デフォルト 'カタ')
+kataText				   *skkeleton-indicator-config-kataText*
+        (`string`: デフォルト `'カタ'`)
         カタカナモードで表示される文字列です。
 
-hankataText                             *skkeleton-indicator-config-hankataText*
-        (デフォルト '半ｶﾀ')
+hankataText				*skkeleton-indicator-config-hankataText*
+        (`string`: デフォルト `'半ｶﾀ'`)
         半角カタカナモードで表示される文字列です。
 
-zenkakuText                             *skkeleton-indicator-config-zenkakuText*
-        (デフォルト '全英')
+zenkakuText				*skkeleton-indicator-config-zenkakuText*
+        (`string`: デフォルト `'全英'`)
         半角カタカナモードで表示される文字列です。
 
-alwaysShown
-        (デフォルト true)
+alwaysShown				*skkeleton-indicator-config-alwaysShown*
+        (`boolean`: デフォルト `true`)
         値が true の場合、インサートモードでは常にインジケータが表示されます。
         false の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータ
         が表示されなくなります)。
 
-fadeOutMs                                 *skkeleton-indicator-config-fadeOutMs*
-        (デフォルト 3000)
+fadeOutMs				  *skkeleton-indicator-config-fadeOutMs*
+        (`integer`: デフォルト `3000`)
         インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場
         合、挿入モードの時は常に表示されるようになります。
 
-ignoreFt                                   *skkeleton-indicator-config-ignoreFt*
-        (デフォルト {})
+ignoreFt				   *skkeleton-indicator-config-ignoreFt*
+        (`string[]`: デフォルト `{}`)
         ファイルタイプを指定するとインジケータが表示されなくなります。
 
-bufFilter                                 *skkeleton-indicator-config-bufFilter*
-        (デフォルト function(_) return true end)
+bufFilter				  *skkeleton-indicator-config-bufFilter*
+        (`fun(bufnr: integer): boolean`: デフォルト `function(_) return true end`)
         インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、
         true を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
+
+==============================================================================
+CAVEATS						   *skkeleton-indicator-caveats*
+
+実装上の制限から、 |cmdline-window| では表示できません。
+
 
 vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
