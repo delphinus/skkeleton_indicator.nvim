@@ -55,8 +55,7 @@ function Modes.new(opts)
   }, { __index = Modes })
 
   for _, v in ipairs(self.modes) do
-    ---@type skkeleton_indicator.modes.Mode
-    local mode = self[v]
+    local mode = self[v] --[[@as skkeleton_indicator.modes.Mode]]
     local w = fn.strdisplaywidth(mode.text)
     if w > self.width then
       self.width = w
