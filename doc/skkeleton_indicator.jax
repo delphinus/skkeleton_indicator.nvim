@@ -28,11 +28,16 @@ USAGE						     *skkeleton-indicator-usage*
 文字列が表示される際のハイライトを変える場合、 `setup()` を呼ぶ前に定義してくだ
 さい。
 >lua
-    vim.api.nvim_set_hl(0, "SkkeletonIndicatorEiji", { fg = "#88c0d0", bg = "#2e3440", bold = true })
-    vim.api.nvim_set_hl(0, "SkkeletonIndicatorHira", { fg = "#2e3440", bg = "#a3be8c", bold = true })
-    vim.api.nvim_set_hl(0, "SkkeletonIndicatorKata", { fg = "#2e3440", bg = "#ebcb8b", bold = true })
-    vim.api.nvim_set_hl(0, "SkkeletonIndicatorHankata", { fg = "#2e3440", bg = "#b48ead", bold = true })
-    vim.api.nvim_set_hl(0, "SkkeletonIndicatorZenkaku", { fg = "#2e3440", bg = "#88c0d0", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorEiji",
+      { fg = "#88c0d0", bg = "#2e3440", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorHira",
+      { fg = "#2e3440", bg = "#a3be8c", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorKata",
+      { fg = "#2e3440", bg = "#ebcb8b", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorHankata",
+      { fg = "#2e3440", bg = "#b48ead", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorZenkaku",
+      { fg = "#2e3440", bg = "#88c0d0", bold = true })
     require("skkeleton_indicator").setup {}
 <
 既存のハイライトを使う場合はその名称を `setup()` を呼ぶ際に指定してください。
