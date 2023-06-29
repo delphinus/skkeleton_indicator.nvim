@@ -97,6 +97,62 @@ zenkakuText				*skkeleton-indicator-config-zenkakuText*
 	(`string`: デフォルト `"全英"`)
 	半角カタカナモードで表示される文字列です。
 
+border					     *skkeleton-indicator-config-border*
+	(`Border?|fun(args: BorderArgs): Border?`: デフォルト `nil`)
+	`nil` 以外の値を与えると枠線を表示します。設定できる値は |nvim_open_win()|
+	の `border` オプションと同じか、又はそれを返す関数です。例えば以下のよう
+	な値が指定できます。
+>lua
+	    border = "single"
+	    border = { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
+
+	枠線のハイライトには文字列のものがそのまま使われます。そのため、文字列
+	のハイライトも設定した方が綺麗に見えるでしょう。もし枠線を文字列と別の
+	ハイライトにしたい場合、テーブルに直接指定するか、
+>lua
+	    border = { { "+", "MyCorner" }, { "x", "MyBorder" } }
+<
+	関数を使ってください。関数を使った場合は、モードに応じて枠線の形も自由
+	に変えられます。関数の返り値が `nil` の場合は枠線が消えます。
+>lua
+	    border = function(args)
+	      if args.mode == "eiji" then
+		return "single"
+	      elseif args.mode == "hira" then
+		return "double"
+	      end
+	      return nil
+	    end
+
+            -- README にある例では以下のような関数を設定しています。
+	    border = function(args)
+	      if args.mode == "hira" then
+		return { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
+	      elseif args.mode == "kata" then
+		return { "⡤", "⠤", "⢤", "⢸", "⠚", "⠒", "⠓", "⡇" }
+	      elseif args.mode == "zenkaku" then
+		return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
+	      end
+	    end,
+
+	このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果
+	が異なります。後者では枠線分の空白が文字列の周りに表示されます。
+
+	型は以下のように定義されています。
+>lua
+	    ---@alias Border
+	    ---| "none"
+	    ---| "single"
+	    ---| "double"
+	    ---| "rounded"
+	    ---| "solid"
+	    ---| "shadow"
+	    ---| string[]
+	    ---| string[][]
+
+	    ---@class BorderArgs
+	    ---@field mode "eiji"|"hira"|"kata"|"hankata"|"zenkaku"
+
 alwaysShown				*skkeleton-indicator-config-alwaysShown*
 	(`boolean`: デフォルト `true`)
 	値が true の場合、インサートモードでは常にインジケータが表示されます。
