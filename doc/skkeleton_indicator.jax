@@ -44,69 +44,73 @@ USAGE						     *skkeleton-indicator-usage*
       hankataHlName = "Special",
       zenkakuHlName = "LineNr",
     }
+
+インジケーターに枠線を付けたい場合は `border` オプションを使ってください。
+>lua
+    require("skkeleton_indicator").setup { border = "single" }
 <
 ==============================================================================
 CONFIG						    *skkeleton-indicator-config*
 
 eijiHlName				 *skkeleton-indicator-config-eijiHlName*
-        (`string`: デフォルト `"SkkeletonIndicatorEiji"`)
-        直接入力モードで表示される文字列に利用されるハイライトグループです。
+	(`string`: デフォルト `"SkkeletonIndicatorEiji"`)
+	直接入力モードで表示される文字列に利用されるハイライトグループです。
 
 hiraHlName				 *skkeleton-indicator-config-hiraHlName*
-        (`string`: デフォルト `"SkkeletonIndicatorHira"``)
-        ひらがなモードで表示されるハイライトグループです。
+	(`string`: デフォルト `"SkkeletonIndicatorHira"``)
+	ひらがなモードで表示されるハイライトグループです。
 
 kataHlName				 *skkeleton-indicator-config-kataHlName*
-        (`string`: デフォルト `"SkkeletonIndicatorKata"`)
-        カタカナモードで表示されるハイライトグループです。
+	(`string`: デフォルト `"SkkeletonIndicatorKata"`)
+	カタカナモードで表示されるハイライトグループです。
 
 hankataHlName			      *skkeleton-indicator-config-hankataHlName*
-        (`string`: デフォルト `"SkkeletonIndicatorHankata"`)
-        半角カタカナモードで表示されるハイライトグループです。
+	(`string`: デフォルト `"SkkeletonIndicatorHankata"`)
+	半角カタカナモードで表示されるハイライトグループです。
 
 zenkakuHlName			      *skkeleton-indicator-config-zenkakuHlName*
-        (`string`: デフォルト `"SkkeletonIndicatorZenkaku"`)
-        半角カタカナモードで表示されるハイライトグループです。
+	(`string`: デフォルト `"SkkeletonIndicatorZenkaku"`)
+	半角カタカナモードで表示されるハイライトグループです。
 
 eijiText				   *skkeleton-indicator-config-eijiText*
-        (`string`: デフォルト `"英字"`)
-        直接入力モードで表示される文字列です。
+	(`string`: デフォルト `"英字"`)
+	直接入力モードで表示される文字列です。
 
 hiraText				   *skkeleton-indicator-config-hiraText*
-        (`string`: デフォルト `"ひら"`)
-        ひらがなモードで表示される文字列です。
+	(`string`: デフォルト `"ひら"`)
+	ひらがなモードで表示される文字列です。
 
 kataText				   *skkeleton-indicator-config-kataText*
-        (`string`: デフォルト `"カタ"`)
-        カタカナモードで表示される文字列です。
+	(`string`: デフォルト `"カタ"`)
+	カタカナモードで表示される文字列です。
 
 hankataText				*skkeleton-indicator-config-hankataText*
-        (`string`: デフォルト `"半ｶﾀ"`)
-        半角カタカナモードで表示される文字列です。
+	(`string`: デフォルト `"半ｶﾀ"`)
+	半角カタカナモードで表示される文字列です。
 
 zenkakuText				*skkeleton-indicator-config-zenkakuText*
-        (`string`: デフォルト `"全英"`)
-        半角カタカナモードで表示される文字列です。
+	(`string`: デフォルト `"全英"`)
+	半角カタカナモードで表示される文字列です。
 
 alwaysShown				*skkeleton-indicator-config-alwaysShown*
-        (`boolean`: デフォルト `true`)
-        値が true の場合、インサートモードでは常にインジケータが表示されます。
-        false の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータ
-        が表示されなくなります)。
+	(`boolean`: デフォルト `true`)
+	値が true の場合、インサートモードでは常にインジケータが表示されます。
+	false の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータ
+	が表示されなくなります)。
 
 fadeOutMs				  *skkeleton-indicator-config-fadeOutMs*
-        (`integer`: デフォルト `3000`)
-        インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場
-        合、挿入モードの時は常に表示されるようになります。
+	(`integer`: デフォルト `3000`)
+	インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場
+	合、挿入モードの時は常に表示されるようになります。
 
 ignoreFt				   *skkeleton-indicator-config-ignoreFt*
-        (`string[]`: デフォルト `{}`)
-        ファイルタイプを指定するとインジケータが表示されなくなります。
+	(`string[]`: デフォルト `{}`)
+	ファイルタイプを指定するとインジケータが表示されなくなります。
 
 bufFilter				  *skkeleton-indicator-config-bufFilter*
-        (`fun(bufnr: integer): boolean`: デフォルト `function(_) return true end`)
-        インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、
-        true を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
+	(`fun(bufnr: integer): boolean`: デフォルト `function(_) return true end`)
+	インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、
+	true を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
 
 ==============================================================================
 CAVEATS						   *skkeleton-indicator-caveats*
