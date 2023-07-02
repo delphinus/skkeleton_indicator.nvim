@@ -6,7 +6,10 @@ local fn = require("skkeleton_indicator.util").fn
 ---@field bg string
 ---@field bold boolean
 
+---@alias skkeleton_indicator.modes.ModeName "hira"|"kata"|"hankata"|"zenkaku"
+
 ---@class skkeleton_indicator.modes.Mode
+---@field name skkeleton_indicator.modes.ModeName
 ---@field hl_name string
 ---@field text string
 ---@field hl skkeleton_indicator.modes.Highlight
@@ -26,26 +29,31 @@ local Modes = {}
 function Modes.new(opts)
   local self = setmetatable({
     eiji = {
+      name = "eiji",
       hl_name = opts.module_name .. "_eiji",
       text = opts.eiji_text,
       hl = { fg = "cyan", bg = "black", bold = true },
     },
     hira = {
+      name = "hira",
       hl_name = opts.module_name .. "_hira",
       hl = { fg = "black", bg = "green", bold = true },
       text = opts.hira_text,
     },
     kata = {
+      name = "kata",
       hl_name = opts.module_name .. "_kata",
       hl = { fg = "black", bg = "yellow", bold = true },
       text = opts.kata_text,
     },
     hankata = {
+      name = "hankata",
       hl_name = opts.module_name .. "_hankata",
       hl = { fg = "black", bg = "magenta", bold = true },
       text = opts.hankata_text,
     },
     zenkaku = {
+      name = "zenkaku",
       hl_name = opts.module_name .. "_zenkaku",
       hl = { fg = "black", bg = "cyan", bold = true },
       text = opts.zenkaku_text,

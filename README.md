@@ -4,7 +4,11 @@ Yet another indicator for [Skkeleton][].
 
 [Skkeleton]: https://github.com/vim-skk/skkeleton
 
-![Kapture 2021-10-24 at 21 07 04](https://user-images.githubusercontent.com/1239245/138593442-0ff34ccc-72a9-4e07-8b84-92e26b79f288.gif)
+https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/951b87b9-6315-472d-af3e-04497acd8d88
+
+**NEW!!** 枠線を付けられるようになりました。
+
+https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/3b9ab4b3-61a2-49e6-99f3-8c0e2b2afb13
 
 ## これは何？
 
