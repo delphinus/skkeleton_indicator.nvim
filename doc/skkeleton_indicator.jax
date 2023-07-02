@@ -49,7 +49,7 @@ USAGE						     *skkeleton-indicator-usage*
       hankataHlName = "Special",
       zenkakuHlName = "LineNr",
     }
-
+<
 インジケーターに枠線を付けたい場合は `border` オプションを使ってください。
 >lua
     require("skkeleton_indicator").setup { border = "single" }
@@ -105,7 +105,7 @@ border					     *skkeleton-indicator-config-border*
 >lua
 	    border = "single"
 	    border = { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
-
+<
 	枠線のハイライトには文字列のものがそのまま使われます。そのため、文字列
 	のハイライトも設定した方が綺麗に見えるでしょう。もし枠線を文字列と別の
 	ハイライトにしたい場合、テーブルに直接指定するか、
@@ -134,7 +134,7 @@ border					     *skkeleton-indicator-config-border*
 		return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
 	      end
 	    end,
-
+<
 	このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果
 	が異なります。後者では枠線分の空白が文字列の周りに表示されます。
 
@@ -152,7 +152,7 @@ border					     *skkeleton-indicator-config-border*
 
 	    ---@class BorderArgs
 	    ---@field mode "eiji"|"hira"|"kata"|"hankata"|"zenkaku"
-
+<
 alwaysShown				*skkeleton-indicator-config-alwaysShown*
 	(`boolean`: デフォルト `true`)
 	値が true の場合、インサートモードでは常にインジケータが表示されます。
