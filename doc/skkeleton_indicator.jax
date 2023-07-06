@@ -133,7 +133,7 @@ border					     *skkeleton-indicator-config-border*
 	      elseif args.mode == "zenkaku" then
 		return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
 	      end
-	    end,
+	    end
 <
 	このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果
 	が異なります。後者では枠線分の空白が文字列の周りに表示されます。
@@ -153,6 +153,16 @@ border					     *skkeleton-indicator-config-border*
 	    ---@class BorderArgs
 	    ---@field mode "eiji"|"hira"|"kata"|"hankata"|"zenkaku"
 <
+row						*skkeleton-indicator-config-row*
+	(`integer`: デフォルト `1` or `0`)
+	インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
+	|skkeleton-indicator-config-border| が `nil`, `"none"`, `"shadow"` の場合、デ
+	フォルト値は `1` 、それ以外の場合は `0` です。
+
+col						*skkeleton-indicator-config-col*
+	(`integer`: デフォルト `1`)
+	インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
+
 alwaysShown				*skkeleton-indicator-config-alwaysShown*
 	(`boolean`: デフォルト `true`)
 	値が true の場合、インサートモードでは常にインジケータが表示されます。

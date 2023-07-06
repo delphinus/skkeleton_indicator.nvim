@@ -8,7 +8,7 @@ https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/951b87b9-63
 
 **NEW!!** 枠線を付けられるようになりました。
 
-https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/3b9ab4b3-61a2-49e6-99f3-8c0e2b2afb13
+https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/74588fb8-a483-4d81-8046-f017351f9dd2
 
 ## これは何？
 

@@ -7,7 +7,7 @@ local skkeleton_indicator = {
 }
 
 function skkeleton_indicator.setup(opts)
-  indicator:setup(snake_case_dict(vim.tbl_extend("force", {
+  local o = snake_case_dict(vim.tbl_extend("force", {
     moduleName = "skkeleton_indicator",
     eijiHlName = "SkkeletonIndicatorEiji",
     hiraHlName = "SkkeletonIndicatorHira",
@@ -19,13 +19,19 @@ function skkeleton_indicator.setup(opts)
     kataText = "カタ",
     hankataText = "半ｶﾀ",
     zenkakuText = "全英",
+    col = 1,
     alwaysShown = true,
     fadeOutMs = 3000,
     ignoreFt = {},
     bufFilter = function(_)
       return true
     end,
-  }, opts or {})))
+  }, opts or {}))
+  -- The default value for `row` is different according to `border`.
+  if not o.row then
+    o.row = (not o.border or o.border == "none" or o.border == "shadow") and 1 or 0
+  end
+  indicator:setup(o)
 end
 
 return skkeleton_indicator

@@ -34,6 +34,8 @@ local Modes = require "skkeleton_indicator.modes"
 ---@field hankata_text string
 ---@field zenkaku_text string
 ---@field border skkeleton_indicator.indicator.BorderOpt
+---@field row integer
+---@field col integer
 ---@field always_shown boolean
 ---@field fade_out_ms integer
 ---@field ignore_ft string[]
@@ -144,8 +146,8 @@ function Indicator:open()
   local winid = api.open_win(buf, false, {
     style = "minimal",
     relative = "cursor",
-    row = 1,
-    col = 1,
+    row = self.opts.row,
+    col = self.opts.col,
     height = 1,
     width = self.modes.width,
     focusable = false,
@@ -196,8 +198,8 @@ function Indicator:move()
   if self:is_opened() and self.winid[1] then
     api.win_set_config(self.winid[1], {
       relative = "cursor",
-      row = 1,
-      col = 1,
+      row = self.opts.row,
+      col = self.opts.col,
     })
   end
 end
