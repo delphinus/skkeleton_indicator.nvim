@@ -133,7 +133,7 @@ border					     *skkeleton-indicator-config-border*
 	      elseif args.mode == "zenkaku" then
 		return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
 	      end
-	    end,
+	    end
 <
 	このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果
 	が異なります。後者では枠線分の空白が文字列の周りに表示されます。
