@@ -13,6 +13,7 @@ local fn = require("skkeleton_indicator.util").fn
 ---@field hl_name string
 ---@field text string
 ---@field hl skkeleton_indicator.modes.Highlight
+---@field width integer
 
 ---@class skkeleton_indicator.modes.Modes
 ---@field eiji skkeleton_indicator.modes.Mode
@@ -21,7 +22,6 @@ local fn = require("skkeleton_indicator.util").fn
 ---@field hankata skkeleton_indicator.modes.Mode
 ---@field zenkaku skkeleton_indicator.modes.Mode
 ---@field modes string[]
----@field width integer
 local Modes = {}
 
 ---@param opts skkeleton_indicator.indicator.Opts
@@ -59,15 +59,11 @@ function Modes.new(opts)
       text = opts.zenkaku_text,
     },
     modes = { "eiji", "hira", "kata", "hankata", "zenkaku" },
-    width = 0,
   }, { __index = Modes })
 
   for _, v in ipairs(self.modes) do
     local mode = self[v] --[[@as skkeleton_indicator.modes.Mode]]
-    local w = fn.strdisplaywidth(mode.text)
-    if w > self.width then
-      self.width = w
-    end
+    mode.width = fn.strdisplaywidth(mode.text)
     ---@type string
     local hl_name = opts[v .. "_hl_name"]
     local ok, hl = pcall(api.get_hl_by_name, hl_name, true)

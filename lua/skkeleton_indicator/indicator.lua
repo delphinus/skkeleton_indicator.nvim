@@ -149,7 +149,7 @@ function Indicator:open()
     row = self.opts.row,
     col = self.opts.col,
     height = 1,
-    width = self.modes.width,
+    width = mode.width,
     focusable = false,
     noautocmd = true,
     border = self:border(mode),
@@ -196,10 +196,12 @@ end
 ---@return nil
 function Indicator:move()
   if self:is_opened() and self.winid[1] then
+    local mode = self.modes:detect()
     api.win_set_config(self.winid[1], {
       relative = "cursor",
       row = self.opts.row,
       col = self.opts.col,
+      width = mode.width,
     })
   end
 end
