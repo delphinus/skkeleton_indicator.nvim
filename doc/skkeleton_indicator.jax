@@ -163,6 +163,11 @@ col						*skkeleton-indicator-config-col*
 	(`integer`: デフォルト `1`)
 	インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
 
+zindex					     *skkeleton-indicator-config-zindex*
+	(`integer`: デフォルト `nil`)
+	インジケーターを他のウィンドウに重ねる際の順序を指定します。詳しくは
+	|nvim_open_win()| の同名のオプションを参照してください。
+
 alwaysShown				*skkeleton-indicator-config-alwaysShown*
 	(`boolean`: デフォルト `true`)
 	値が true の場合、インサートモードでは常にインジケータが表示されます。
