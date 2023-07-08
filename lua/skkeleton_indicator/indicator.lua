@@ -36,6 +36,7 @@ local Modes = require "skkeleton_indicator.modes"
 ---@field border skkeleton_indicator.indicator.BorderOpt
 ---@field row integer
 ---@field col integer
+---@field zindex integer
 ---@field always_shown boolean
 ---@field fade_out_ms integer
 ---@field ignore_ft string[]
@@ -153,6 +154,7 @@ function Indicator:open()
     focusable = false,
     noautocmd = true,
     border = self:border(mode),
+    zindex = self.opts.zindex,
   })
   self:border_highlight(winid, mode)
   table.insert(self.winid, 1, winid)
