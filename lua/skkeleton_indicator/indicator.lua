@@ -183,7 +183,7 @@ function Indicator:update(event)
       ---@type integer
       local buf = api.win_get_buf(winid)
       self:set_text(buf, mode)
-      api.win_set_config(winid, { border = self:border(mode) })
+      api.win_set_config(winid, { border = self:border(mode), width = mode.width })
       self:border_highlight(winid, mode)
     else
       self:open()
