@@ -23,6 +23,7 @@ local skkeleton_indicator = {
 ---@field border skkeleton_indicator.indicator.BorderOpt
 ---@field row integer
 ---@field col integer
+---@field zindex integer
 ---@field alwaysShown boolean
 ---@field fadeOutMs integer
 ---@field ignoreFt string[]
