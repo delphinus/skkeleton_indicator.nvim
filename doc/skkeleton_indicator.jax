@@ -75,7 +75,7 @@ hankataHlName			      *skkeleton-indicator-config-hankataHlName*
 
 zenkakuHlName			      *skkeleton-indicator-config-zenkakuHlName*
 	(`string`: デフォルト `"SkkeletonIndicatorZenkaku"`)
-	半角カタカナモードで表示されるハイライトグループです。
+	全角英数モードで表示されるハイライトグループです。
 
 eijiText				   *skkeleton-indicator-config-eijiText*
 	(`string`: デフォルト `"英字"`)
@@ -95,7 +95,7 @@ hankataText				*skkeleton-indicator-config-hankataText*
 
 zenkakuText				*skkeleton-indicator-config-zenkakuText*
 	(`string`: デフォルト `"全英"`)
-	半角カタカナモードで表示される文字列です。
+	全角英数モードで表示される文字列です。
 
 border					     *skkeleton-indicator-config-border*
 	(`Border?|fun(args: BorderArgs): Border?`: デフォルト `nil`)
