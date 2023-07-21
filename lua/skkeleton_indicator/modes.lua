@@ -6,7 +6,7 @@ local fn = require("skkeleton_indicator.util").fn
 ---@field bg string
 ---@field bold boolean
 
----@alias skkeleton_indicator.modes.ModeName "hira"|"kata"|"hankata"|"zenkaku"
+---@alias skkeleton_indicator.modes.ModeName "hira"|"kata"|"hankata"|"zenkaku"|"abbrev"
 
 ---@class skkeleton_indicator.modes.Mode
 ---@field name skkeleton_indicator.modes.ModeName
@@ -21,6 +21,7 @@ local fn = require("skkeleton_indicator.util").fn
 ---@field kata skkeleton_indicator.modes.Mode
 ---@field hankata skkeleton_indicator.modes.Mode
 ---@field zenkaku skkeleton_indicator.modes.Mode
+---@field abbrev skkeleton_indicator.modes.Mode
 ---@field modes string[]
 local Modes = {}
 
@@ -58,7 +59,13 @@ function Modes.new(opts)
       hl = { fg = "black", bg = "cyan", bold = true },
       text = opts.zenkaku_text,
     },
-    modes = { "eiji", "hira", "kata", "hankata", "zenkaku" },
+    abbrev = {
+      name = "abbrev",
+      hl_name = opts.module_name .. "_abbrev",
+      hl = { fg = "black", bg = "red", bold = true },
+      text = opts.abbrev_text,
+    },
+    modes = { "eiji", "hira", "kata", "hankata", "zenkaku", "abbrev" },
   }, { __index = Modes })
 
   for _, v in ipairs(self.modes) do
@@ -107,8 +114,10 @@ function Modes:detect()
     return self.kata
   elseif m == "zenkaku" then
     return self.zenkaku
+  elseif m == "hankata" then
+    return self.hankata
   end
-  return self.hankata
+  return self.abbrev
 end
 
 return Modes
