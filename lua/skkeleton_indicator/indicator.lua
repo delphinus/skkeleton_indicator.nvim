@@ -28,11 +28,13 @@ local Modes = require "skkeleton_indicator.modes"
 ---@field kata_hl_name string
 ---@field hankata_hl_name string
 ---@field zenkaku_hl_name string
+---@field abbrev_hl_name string
 ---@field eiji_text string
 ---@field hira_text string
 ---@field kata_text string
 ---@field hankata_text string
 ---@field zenkaku_text string
+---@field abbrev_text string
 ---@field border skkeleton_indicator.indicator.BorderOpt
 ---@field row integer
 ---@field col integer
