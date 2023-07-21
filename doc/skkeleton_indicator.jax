@@ -38,6 +38,8 @@ USAGE						     *skkeleton-indicator-usage*
       { fg = "#2e3440", bg = "#b48ead", bold = true })
     vim.api.nvim_set_hl(0, "SkkeletonIndicatorZenkaku",
       { fg = "#2e3440", bg = "#88c0d0", bold = true })
+    vim.api.nvim_set_hl(0, "SkkeletonIndicatorAbbrev",
+      { fg = "#e5e9f0", bg = "#bf616a", bold = true })
     require("skkeleton_indicator").setup {}
 <
 既存のハイライトを使う場合はその名称を `setup()` を呼ぶ際に指定してください。
@@ -48,6 +50,7 @@ USAGE						     *skkeleton-indicator-usage*
       kataHlName = "Todo",
       hankataHlName = "Special",
       zenkakuHlName = "LineNr",
+      abbrevHlName = "Error",
     }
 <
 インジケーターに枠線を付けたい場合は `border` オプションを使ってください。
@@ -77,6 +80,10 @@ zenkakuHlName			      *skkeleton-indicator-config-zenkakuHlName*
 	(`string`: デフォルト `"SkkeletonIndicatorZenkaku"`)
 	全角英数モードで表示されるハイライトグループです。
 
+abbrevHlName			       *skkeleton-indicator-config-abbrevHlName*
+	(`string`: デフォルト `"SkkeletonIndicatorAbbrev"`)
+	全角英数モードで表示されるハイライトグループです。
+
 eijiText				   *skkeleton-indicator-config-eijiText*
 	(`string`: デフォルト `"英字"`)
 	直接入力モードで表示される文字列です。
@@ -95,6 +102,10 @@ hankataText				*skkeleton-indicator-config-hankataText*
 
 zenkakuText				*skkeleton-indicator-config-zenkakuText*
 	(`string`: デフォルト `"全英"`)
+	全角英数モードで表示される文字列です。
+
+abbrevText				 *skkeleton-indicator-config-abbrevText*
+	(`string`: デフォルト `"abbr"`)
 	全角英数モードで表示される文字列です。
 
 border					     *skkeleton-indicator-config-border*
