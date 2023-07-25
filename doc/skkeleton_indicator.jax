@@ -106,7 +106,7 @@ zenkakuText				*skkeleton-indicator-config-zenkakuText*
 
 abbrevText				 *skkeleton-indicator-config-abbrevText*
 	(`string`: デフォルト `"abbr"`)
-	全角英数モードで表示される文字列です。
+	abbrev モードで表示される文字列です。
 
 border					     *skkeleton-indicator-config-border*
 	(`Border?|fun(args: BorderArgs): Border?`: デフォルト `nil`)
