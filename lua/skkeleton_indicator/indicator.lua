@@ -111,7 +111,7 @@ end
 ---@param mode skkeleton_indicator.modes.Mode
 ---@return nil
 function Indicator:set_text(buf, mode)
-  api.buf_set_lines(buf, 0, 0, false, { mode.text })
+  api.buf_set_lines(buf, 0, -1, false, { mode.text })
   api.buf_clear_namespace(buf, self.ns, 0, -1)
   api.buf_add_highlight(buf, self.ns, mode.hl_name, 0, 0, -1)
   self.timer:stop()
