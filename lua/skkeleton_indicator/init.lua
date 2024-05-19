@@ -1,64 +1,26 @@
-local Indicator = require "skkeleton_indicator.indicator"
-local snake_case_dict = require("skkeleton_indicator.util").snake_case_dict
+---@type SkkeletonIndicator?
+local indicator
 
-local indicator = Indicator.new()
+vim.api.nvim_create_autocmd("InsertEnter", {
+  once = true,
+  callback = function()
+    if not indicator then
+      indicator = require "skkeleton_indicator.indicator"()
+      indicator:open()
+    end
+  end,
+})
 
----@class SkkeletonIndicator
-local skkeleton_indicator = {
-  instance = indicator,
+return {
+  ---@param opts? SkkeletonIndicatorOpts
+  setup = function(opts)
+    require("skkeleton_indicator.config").setup(opts)
+    if indicator then
+      indicator.modes = require("skkeleton_indicator.modes").new()
+      indicator:update "mode-changed"
+    end
+  end,
+  indicator = function()
+    return indicator
+  end,
 }
-
----@class SkkeletonIndicatorOpts
----@field moduleName? string
----@field eijiHlName? string
----@field hiraHlName? string
----@field kataHlName? string
----@field hankataHlName? string
----@field zenkakuHlName? string
----@field eijiText? string
----@field hiraText? string
----@field kataText? string
----@field hankataText? string
----@field zenkakuText? string
----@field border? skkeleton_indicator.indicator.BorderOpt
----@field row? integer
----@field col? integer
----@field zindex? integer
----@field alwaysShown? boolean
----@field fadeOutMs? integer
----@field ignoreFt? string[]
----@field bufFilter? fun(buf: integer): boolean
-
----@param opts? SkkeletonIndicatorOpts
----@return nil
-function skkeleton_indicator.setup(opts)
-  local o = snake_case_dict(vim.tbl_extend("force", {
-    moduleName = "skkeleton_indicator",
-    eijiHlName = "SkkeletonIndicatorEiji",
-    hiraHlName = "SkkeletonIndicatorHira",
-    kataHlName = "SkkeletonIndicatorKata",
-    hankataHlName = "SkkeletonIndicatorHankata",
-    zenkakuHlName = "SkkeletonIndicatorZenkaku",
-    abbrevHlName = "SkkeletonIndicatorAbbrev",
-    eijiText = "英字",
-    hiraText = "ひら",
-    kataText = "カタ",
-    hankataText = "半ｶﾀ",
-    zenkakuText = "全英",
-    abbrevText = "abbr",
-    col = 1,
-    alwaysShown = true,
-    fadeOutMs = 3000,
-    ignoreFt = {},
-    bufFilter = function(_)
-      return true
-    end,
-  }, opts or {}))
-  -- The default value for `row` is different according to `border`.
-  if not o.row then
-    o.row = (not o.border or o.border == "none" or o.border == "shadow") and 1 or 0
-  end
-  indicator:setup(o)
-end
-
-return skkeleton_indicator

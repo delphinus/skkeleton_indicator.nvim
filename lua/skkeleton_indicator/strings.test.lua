@@ -1,5 +1,5 @@
-local snake_case = require("skkeleton_indicator.util").snake_case
-local snake_case_dict = require("skkeleton_indicator.util").snake_case_dict
+local snake_case = require("skkeleton_indicator.strings").snake_case
+local snake_case_dict = require("skkeleton_indicator.strings").snake_case_dict
 
 describe("snake_case", function()
   for _, c in ipairs {
