@@ -11,16 +11,17 @@ vim.api.nvim_create_autocmd("InsertEnter", {
   end,
 })
 
+local function refresh()
+  if indicator then
+    indicator:refresh()
+  end
+end
+
 return {
   ---@param opts? SkkeletonIndicatorOpts
   setup = function(opts)
     require("skkeleton_indicator.config").setup(opts)
-    if indicator then
-      indicator.modes = require("skkeleton_indicator.modes").new()
-      indicator:update "mode-changed"
-    end
+    refresh()
   end,
-  indicator = function()
-    return indicator
-  end,
+  refresh = refresh,
 }

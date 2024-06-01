@@ -11,12 +11,22 @@ local config = require "skkeleton_indicator.config"
 ---@field width integer
 local Mode = {
   default_hl = {
-    eiji = { fg = "cyan", bg = "black", bold = true },
-    hira = { fg = "black", bg = "green", bold = true },
-    kata = { fg = "black", bg = "yellow", bold = true },
-    hankata = { fg = "black", bg = "magenta", bold = true },
-    zenkaku = { fg = "black", bg = "cyan", bold = true },
-    abbrev = { fg = "black", bg = "red", bold = true },
+    dark = {
+      eiji = { fg = "NvimLightBlue", bg = "NvimDarkGrey2", ctermfg = "blue", ctermbg = "black", bold = true },
+      hira = { fg = "NvimDarkGrey2", bg = "NvimLightGreen", ctermfg = "black", ctermbg = "green", bold = true },
+      kata = { fg = "NvimDarkGrey2", bg = "NvimLightYellow", ctermfg = "black", ctermbg = "yellow", bold = true },
+      hankata = { fg = "NvimDarkGrey2", bg = "NvimLightMagenta", ctermfg = "black", ctermbg = "magenta", bold = true },
+      zenkaku = { fg = "NvimLightGrey2", bg = "NvimDarkCyan", ctermfg = "black", ctermbg = "cyan", bold = true },
+      abbrev = { fg = "NvimLightGrey2", bg = "NvimDarkRed", ctermfg = "white", ctermbg = "red", bold = true },
+    },
+    light = {
+      eiji = { fg = "NvimDarkBlue", bg = "NvimLightGrey2", ctermfg = "blue", ctermbg = "white", bold = true },
+      hira = { fg = "NvimDarkGrey2", bg = "NvimLightGreen", ctermfg = "white", ctermbg = "green", bold = true },
+      kata = { fg = "NvimDarkGrey2", bg = "NvimLightYellow", ctermfg = "white", ctermbg = "yellow", bold = true },
+      hankata = { fg = "NvimDarkGrey2", bg = "NvimLightMagenta", ctermfg = "white", ctermbg = "magenta", bold = true },
+      zenkaku = { fg = "NvimDarkGrey2", bg = "NvimLightBlue", ctermfg = "black", ctermbg = "blue", bold = true },
+      abbrev = { fg = "NvimDarkGrey2", bg = "NvimLightRed", ctermfg = "black", ctermbg = "red", bold = true },
+    },
   },
 }
 
@@ -29,8 +39,9 @@ function Mode.new(name)
   )
   self.width = vim.fn.strdisplaywidth(self.text)
   local hl = vim.api.nvim_get_hl(0, { name = self.hl_name }) --[[@as vim.api.keyset.highlight]]
-  if vim.tbl_isempty(hl) then
-    hl = Mode.default_hl[name]
+  local is_default_colorscheme = not vim.g.colors_name
+  if vim.tbl_isempty(hl) or (is_default_colorscheme and config.use_default_highlight) then
+    hl = Mode.default_hl[vim.o.background][name]
   end
   vim.api.nvim_set_hl(0, self.hl_name, hl)
   return self

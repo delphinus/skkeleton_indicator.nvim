@@ -44,6 +44,7 @@ function Indicator.new()
       { "User", "skkeleton-mode-changed", self:method("update", "mode-changed") },
       { "User", "skkeleton-disable-post", self:method("update", "disable-post") },
       { "User", "skkeleton-enable-post", self:method("update", "enable-post") },
+      { "OptionSet", "background", self:method "refresh" },
     })
     :each(function(def)
       vim.api.nvim_create_autocmd(def[1], { group = group, pattern = def[2], callback = def[3] })
@@ -193,6 +194,11 @@ end
 
 function Indicator:is_in_cmdwin()
   return vim.fn.getcmdwintype() ~= ""
+end
+
+function Indicator:refresh()
+  self.modes = Modes.new()
+  self:update "mode-changed"
 end
 
 return setmetatable({}, { __call = Indicator.new }) --[[@as fun(): SkkeletonIndicator]]

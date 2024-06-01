@@ -20,6 +20,7 @@
 ---@field fadeOutMs? integer
 ---@field ignoreFt? string[]
 ---@field bufFilter? fun(buf: integer): boolean
+---@field useDefaultHighlight? boolean
 
 ---@class SkkeletonIndicatorRawConfig
 ---@field module_name string
@@ -43,6 +44,7 @@
 ---@field fade_out_ms integer
 ---@field ignore_ft string[]
 ---@field buf_filter fun(buf: integer): boolean
+---@field use_default_highlight boolean
 
 ---@type SkkeletonIndicatorRawConfig
 local default_values = {
@@ -67,6 +69,7 @@ local default_values = {
   buf_filter = function(_)
     return true
   end,
+  use_default_highlight = true,
 }
 
 ---@type table<string, boolean>
@@ -92,6 +95,7 @@ local keys = {
   fade_out_ms = true,
   ignore_ft = true,
   buf_filter = true,
+  use_default_highlight = true,
 }
 
 ---@class SkkeletonIndicatorConfig: SkkeletonIndicatorRawConfig
@@ -134,6 +138,7 @@ local function setup(self)
       fade_out_ms = { config.fade_out_ms, "n" },
       ignore_ft = { config.ignore_ft, "t" },
       buf_filter = { config.buf_filter, "f" },
+      use_default_highlight = { config.use_default_highlight, "b" },
     }
     self.values = config
   end
