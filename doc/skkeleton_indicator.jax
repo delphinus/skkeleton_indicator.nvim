@@ -6,8 +6,10 @@ Licence: zlib
 CONTENTS
 
 Introduction		|skkeleton-indicator-introduction|
-Usage			|skkeleton-indicator-usage|
+Install			|skkeleton-indicator-install|
 Config			|skkeleton-indicator-config|
+Options			|skkeleton-indicator-options|
+Highlight		|skkeleton-indicator-highlight|
 Caveats			|skkeleton-indicator-caveats|
 
 
@@ -18,13 +20,27 @@ INTRODUCTION				      *skkeleton-indicator-introduction*
 
 NOTE: このプラグインは Neovim 専用です。
 
-==============================================================================
-USAGE						     *skkeleton-indicator-usage*
 
-プラグインを読み込んだ後に `setup()` 関数を呼び出してください。
+==============================================================================
+INSTALL						   *skkeleton-indicator-install*
+
+WARNING: デフォルトブランチ `v2` は Neovim 0.10.0 以降で動作します。もしそれより
+古いバージョンで動かしたい場合は `main` ブランチを利用してください。
+https://github.com/delphinus/skkeleton_indicator.nvim/tree/main/
+
+|lazy.nvim| だと以下のように設定します。
+>lua
+    { "delphinus/skkeleton_indicator.nvim", opts = {} }
+
+上記のように設定すれば lazy.nvim が自動的に `setup()` を呼んでくれますが、その他
+のプラグインマネージャーの場合は明示的に呼んでください。
 >lua
     require("skkeleton_indicator").setup {}
-<
+
+
+==============================================================================
+CONFIG						    *skkeleton-indicator-config*
+
 文字列が表示される際のハイライトを変える場合、 `setup()` を呼ぶ前に定義してくだ
 さい。
 >lua
@@ -40,6 +56,7 @@ USAGE						     *skkeleton-indicator-usage*
       { fg = "#2e3440", bg = "#88c0d0", bold = true })
     vim.api.nvim_set_hl(0, "SkkeletonIndicatorAbbrev",
       { fg = "#e5e9f0", bg = "#bf616a", bold = true })
+
     require("skkeleton_indicator").setup {}
 <
 既存のハイライトを使う場合はその名称を `setup()` を呼ぶ際に指定してください。
@@ -56,148 +73,237 @@ USAGE						     *skkeleton-indicator-usage*
 インジケーターに枠線を付けたい場合は `border` オプションを使ってください。
 >lua
     require("skkeleton_indicator").setup { border = "single" }
-<
+
+
 ==============================================================================
-CONFIG						    *skkeleton-indicator-config*
+OPTIONS						   *skkeleton-indicator-options*
 
-eijiHlName				 *skkeleton-indicator-config-eijiHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorEiji"`)
-	直接入力モードで表示される文字列に利用されるハイライトグループです。
+					*skkeleton-indicator-options-eijiHlName*
+eijiHlName ~
 
-hiraHlName				 *skkeleton-indicator-config-hiraHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorHira"``)
-	ひらがなモードで表示されるハイライトグループです。
+デフォルト: `"SkkeletonIndicatorEiji"`
+型: `string`
 
-kataHlName				 *skkeleton-indicator-config-kataHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorKata"`)
-	カタカナモードで表示されるハイライトグループです。
+直接入力モードで表示される文字列に利用されるハイライトグループです。
 
-hankataHlName			      *skkeleton-indicator-config-hankataHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorHankata"`)
-	半角カタカナモードで表示されるハイライトグループです。
+					*skkeleton-indicator-options-hiraHlName*
+hiraHlName ~
 
-zenkakuHlName			      *skkeleton-indicator-config-zenkakuHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorZenkaku"`)
-	全角英数モードで表示されるハイライトグループです。
+デフォルト: `"SkkeletonIndicatorHira"`
+型: `string`
 
-abbrevHlName			       *skkeleton-indicator-config-abbrevHlName*
-	(`string`: デフォルト `"SkkeletonIndicatorAbbrev"`)
-	全角英数モードで表示されるハイライトグループです。
+ひらがなモードで表示されるハイライトグループです。
 
-eijiText				   *skkeleton-indicator-config-eijiText*
-	(`string`: デフォルト `"英字"`)
-	直接入力モードで表示される文字列です。
+					*skkeleton-indicator-options-kataHlName*
+kataHlName ~
 
-hiraText				   *skkeleton-indicator-config-hiraText*
-	(`string`: デフォルト `"ひら"`)
-	ひらがなモードで表示される文字列です。
+デフォルト: `"SkkeletonIndicatorKata"`
+型: `string`
 
-kataText				   *skkeleton-indicator-config-kataText*
-	(`string`: デフォルト `"カタ"`)
-	カタカナモードで表示される文字列です。
+カタカナモードで表示されるハイライトグループです。
 
-hankataText				*skkeleton-indicator-config-hankataText*
-	(`string`: デフォルト `"半ｶﾀ"`)
-	半角カタカナモードで表示される文字列です。
+				     *skkeleton-indicator-options-hankataHlName*
+hankataHlName ~
 
-zenkakuText				*skkeleton-indicator-config-zenkakuText*
-	(`string`: デフォルト `"全英"`)
-	全角英数モードで表示される文字列です。
+デフォルト: `"SkkeletonIndicatorHankata"`
+型: `string`
 
-abbrevText				 *skkeleton-indicator-config-abbrevText*
-	(`string`: デフォルト `"abbr"`)
-	abbrev モードで表示される文字列です。
+半角カタカナモードで表示されるハイライトグループです。
 
-border					     *skkeleton-indicator-config-border*
-	(`Border?|fun(args: BorderArgs): Border?`: デフォルト `nil`)
-	`nil` 以外の値を与えると枠線を表示します。設定できる値は |nvim_open_win()|
-	の `border` オプションと同じか、又はそれを返す関数です。例えば以下のよう
-	な値が指定できます。
+				     *skkeleton-indicator-options-zenkataHlName*
+zenkataHlName ~
+
+デフォルト: `"SkkeletonIndicatorZenkata"`
+型: `string`
+
+全角英数モードで表示されるハイライトグループです。
+
+				     *skkeleton-indicator-options-abbrevHlName*
+abbrevHlName ~
+
+デフォルト: `"SkkeletonIndicatorAbbrev"`
+型: `string`
+
+abbrev モードで表示されるハイライトグループです。
+
+					  *skkeleton-indicator-options-eijiText*
+eijiText ~
+
+デフォルト: `"英字"`
+型: `string`
+
+直接入力モードで表示される文字列です。
+
+					  *skkeleton-indicator-options-hiraText*
+hiraText ~
+
+デフォルト: `"ひら"`
+型: `string`
+
+ひらがなモードで表示される文字列です。
+
+					  *skkeleton-indicator-options-kataText*
+kataText ~
+
+デフォルト: `"カタ"`
+型: `string`
+
+カタカナモードで表示される文字列です。
+
+				       *skkeleton-indicator-options-hankataText*
+hankataText ~
+
+デフォルト: `"半ｶﾀ"`
+型: `string`
+
+半角カタカナモードで表示される文字列です。
+
+				       *skkeleton-indicator-options-zenkakuText*
+zenkakuText ~
+
+デフォルト: `"全英"`
+型: `string`
+
+全角英数モードで表示される文字列です。
+
+					*skkeleton-indicator-options-abbrevText*
+abbrevText ~
+
+デフォルト: `"abbr"`
+型: `string`
+
+abbrev モードで表示される文字列です。
+
+					    *skkeleton-indicator-options-border*
+border ~
+
+デフォルト: `nil`
+型: `Border?|fun(args: BorderArgs): Border?`
+
+`nil` 以外の値を与えると枠線を表示します。設定できる値は |nvim_open_win()| の
+`border` オプションと同じか、又はそれを返す関数です。例えば以下のような値が指定
+できます。
 >lua
-	    border = "single"
-	    border = { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
+    border = "single"
+    border = { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
 <
-	枠線のハイライトには文字列のものがそのまま使われます。そのため、文字列
-	のハイライトも設定した方が綺麗に見えるでしょう。もし枠線を文字列と別の
-	ハイライトにしたい場合、テーブルに直接指定するか、
+枠線のハイライトには文字列のものがそのまま使われます。そのため、文字列のハイラ
+イトも設定した方が綺麗に見えるでしょう。もし枠線を文字列と別のハイライトにした
+い場合、テーブルに直接指定するか、
 >lua
-	    border = { { "+", "MyCorner" }, { "x", "MyBorder" } }
+    border = { { "+", "MyCorner" }, { "x", "MyBorder" } }
 <
-	関数を使ってください。関数を使った場合は、モードに応じて枠線の形も自由
-	に変えられます。関数の返り値が `nil` の場合は枠線が消えます。
+関数を使ってください。関数を使った場合は、モードに応じて枠線の形も自由に変えら
+れます。関数の返り値が `nil` の場合は枠線が消えます。
 >lua
-	    border = function(args)
-	      if args.mode == "eiji" then
-		return "single"
-	      elseif args.mode == "hira" then
-		return "double"
-	      end
-	      return nil
-	    end
+    border = function(args)
+      if args.mode == "eiji" then
+	return "single"
+      elseif args.mode == "hira" then
+	return "double"
+      end
+      return nil
+    end
 
-            -- README にある例では以下のような関数を設定しています。
-	    border = function(args)
-	      if args.mode == "hira" then
-		return { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
-	      elseif args.mode == "kata" then
-		return { "⡤", "⠤", "⢤", "⢸", "⠚", "⠒", "⠓", "⡇" }
-	      elseif args.mode == "zenkaku" then
-		return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
-	      end
-	    end
+    -- README にある例では以下のような関数を設定しています。
+    border = function(args)
+      if args.mode == "hira" then
+	return { "⡠", "⠤", "⢄", "⢸", "⠊", "⠒", "⠑", "⡇" }
+      elseif args.mode == "kata" then
+	return { "⡤", "⠤", "⢤", "⢸", "⠚", "⠒", "⠓", "⡇" }
+      elseif args.mode == "zenkaku" then
+	return { "⣤", "⣤", "⣤", "⣿", "⠛", "⠛", "⠛", "⣿" }
+      end
+    end
 <
-	このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果
-	が異なります。後者では枠線分の空白が文字列の周りに表示されます。
+このオプションを指定しない場合と、 `nil` を返す関数を設定する場合は結果が異なり
+ます。後者では枠線分の空白が文字列の周りに表示されます。
 
-	型は以下のように定義されています。
+型は以下のように定義されています。
 >lua
-	    ---@alias Border
-	    ---| "none"
-	    ---| "single"
-	    ---| "double"
-	    ---| "rounded"
-	    ---| "solid"
-	    ---| "shadow"
-	    ---| string[]
-	    ---| string[][]
+    ---@alias Border
+    ---| "none"
+    ---| "single"
+    ---| "double"
+    ---| "rounded"
+    ---| "solid"
+    ---| "shadow"
+    ---| string[]
+    ---| string[][]
 
-	    ---@class BorderArgs
-	    ---@field mode "eiji"|"hira"|"kata"|"hankata"|"zenkaku"
+    ---@class BorderArgs
+    ---@field mode "eiji"|"hira"|"kata"|"hankata"|"zenkaku"
 <
-row						*skkeleton-indicator-config-row*
-	(`integer`: デフォルト `1` or `0`)
-	インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
-	|skkeleton-indicator-config-border| が `nil`, `"none"`, `"shadow"` の場合、デ
-	フォルト値は `1` 、それ以外の場合は `0` です。
+					       *skkeleton-indicator-options-row*
+row ~
 
-col						*skkeleton-indicator-config-col*
-	(`integer`: デフォルト `1`)
-	インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
+デフォルト: `1` or `0`
+型: `integer`
 
-zindex					     *skkeleton-indicator-config-zindex*
-	(`integer`: デフォルト `nil`)
-	インジケーターを他のウィンドウに重ねる際の順序を指定します。詳しくは
-	|nvim_open_win()| の同名のオプションを参照してください。
+インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
+|skkeleton-indicator-options-border| が `nil`, `"none"`, `"shadow"` の場合、デフォルト
+値は `1`、それ以外の場合は `0` です。
 
-alwaysShown				*skkeleton-indicator-config-alwaysShown*
-	(`boolean`: デフォルト `true`)
-	値が true の場合、インサートモードでは常にインジケータが表示されます。
-	false の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータ
-	が表示されなくなります)。
+					       *skkeleton-indicator-options-col*
+col ~
 
-fadeOutMs				  *skkeleton-indicator-config-fadeOutMs*
-	(`integer`: デフォルト `3000`)
-	インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場
-	合、挿入モードの時は常に表示されるようになります。
+デフォルト: `1`
+型: `integer`
 
-ignoreFt				   *skkeleton-indicator-config-ignoreFt*
-	(`string[]`: デフォルト `{}`)
-	ファイルタイプを指定するとインジケータが表示されなくなります。
+インジケーターを表示する縦位置を、カーソル位置を基準として設定します。
 
-bufFilter				  *skkeleton-indicator-config-bufFilter*
-	(`fun(bufnr: integer): boolean`: デフォルト `function(_) return true end`)
-	インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、
-	true を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
+					    *skkeleton-indicator-options-zindex*
+zindex ~
+
+デフォルト: `nil`
+型: `integer`
+
+インジケーターを他のウィンドウに重ねる際の順序を指定します。詳しくは
+|nvim_open_win()| にある同名のオプションを参照してください。
+
+				       *skkeleton-indicator-options-alwaysShown*
+alwaysShown ~
+
+デフォルト: `true`
+型: `boolean`
+
+値が `true` の場合、インサートモードでは常にインジケータが表示されます。 `false`
+の場合は Skkeleton が有効な時のみ表示されます(eiji インジケータが表示されなく
+なります)。
+
+					 *skkeleton-indicator-options-fadeOutMs*
+fadeOutMs ~
+
+デフォルト: `3000`
+型: `integer`
+
+インジケータが消えるまでの時間です。ミリ秒で指定します。0 を指定した場合、挿入
+モードの時は常に表示されるようになります。
+
+					  *skkeleton-indicator-options-ignoreFt*
+ignoreFt ~
+
+デフォルト: `{}`
+型: `string[]`
+
+ファイルタイプを指定するとインジケータが表示されなくなります。
+
+					 *skkeleton-indicator-options-bufFilter*
+bufFilter ~
+
+デフォルト: `function(_) return true end`
+型: `fun(bufnr: integer): boolean`
+
+インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、 `true`
+を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
+
+
+==============================================================================
+HIGHLIGHT					 *skkeleton-indicator-highlight*
+
+			  *skkeleton-indicator-highlight-skkeletonindicatoreiji*
+SkkeletonIndicatorEiji ~
+
 
 ==============================================================================
 CAVEATS						   *skkeleton-indicator-caveats*
@@ -205,4 +311,4 @@ CAVEATS						   *skkeleton-indicator-caveats*
 実装上の制限から、 |cmdline-window| では表示できません。
 
 
-vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:noet
