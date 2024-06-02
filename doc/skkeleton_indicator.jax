@@ -8,6 +8,7 @@ CONTENTS
 Introduction		|skkeleton-indicator-introduction|
 Install			|skkeleton-indicator-install|
 Config			|skkeleton-indicator-config|
+Functions		|skkeleton-indicator-functions|
 Options			|skkeleton-indicator-options|
 Highlight		|skkeleton-indicator-highlight|
 Caveats			|skkeleton-indicator-caveats|
@@ -76,6 +77,29 @@ CONFIG						    *skkeleton-indicator-config*
 
 
 ==============================================================================
+FUNCTIONS					 *skkeleton-indicator-functions*
+
+モジュールを読み込む（ `require "skkeleton_indicator"` ）すると、 |InsertEnter| イ
+ベントに自動コマンドがセットされ、挿入モード起動時にプラグインが起動します。
+
+					   *skkeleton-indicator-functions-setup*
+setup ~
+
+型: `fun(opts: SkkeletonIndicatorOpts)`
+
+設定を保存します。引数に誤った型の値を与えるとエラーになります。起動後に呼び出
+した場合、変更は即時に反映されます。
+
+					 *skkeleton-indicator-functions-refresh*
+refresh ~
+
+型: `fun()`
+
+設定を反映させます。 |skkeleton-indicator-functions-setup| で設定した内容に加
+え、各種ハイライトグループ |skkeleton-indicator-highlight| も反映されます。
+
+
+==============================================================================
 OPTIONS						   *skkeleton-indicator-options*
 
 					*skkeleton-indicator-options-eijiHlName*
@@ -110,10 +134,10 @@ hankataHlName ~
 
 半角カタカナモードで表示されるハイライトグループです。
 
-				     *skkeleton-indicator-options-zenkataHlName*
-zenkataHlName ~
+				     *skkeleton-indicator-options-zenkakuHlName*
+zenkakuHlName ~
 
-デフォルト: `"SkkeletonIndicatorZenkata"`
+デフォルト: `"SkkeletonIndicatorZenkaku"`
 型: `string`
 
 全角英数モードで表示されるハイライトグループです。
@@ -297,12 +321,137 @@ bufFilter ~
 インジケータを表示するか決める関数です。引数にはバッファの番号が渡され、 `true`
 を返すと表示します。ignore_ft のファイルタイプの後に評価されます。
 
+			       *skkeleton-indicator-options-useDefaultHighlight*
+useDefaultHighlight ~
+
+デフォルト: `true`
+型: `boolean`
+
+デフォルトのカラースキームを使っている時、ユーザー独自のハイライトグループを設
+定する場合は `false` に設定します。
+|skkeleton-indicator-highlight-for-default-colorscheme| も参照してください。
+
 
 ==============================================================================
 HIGHLIGHT					 *skkeleton-indicator-highlight*
 
+以下に列挙したハイライトグループ |highlight-groups| をユーザー自身が設定していな
+い場合、デフォルトの値が利用されます。その際 |'background'| の値を元に適切な配色
+が利用されます。
+
+			 *skkeleton-indicator-highlight-for-default-colorscheme*
+------------------------------------------------------------------------------
+For Default Colorscheme
+
+デフォルトのカラースキームを利用している場合、ユーザーが独自のハイライトグルー
+プを設定していても無視されます。その代わり、起動時だけでなく、起動後明示的に
+|'background'| の値を変更した時も適切な配色に変更されます。
+
+もしこの強制を避け、デフォルトカラースキームでユーザー独自の配色を利用したい場
+合、 |skkeleton-indicator-options-useDefaultHighlight| を参照してください。
+
+	  *skkeleton-indicator-highlight-change-every-time-change-of-background*
+------------------------------------------------------------------------------
+Change every time change of 'background'
+
+デフォルトのカラースキームで対応しているように、起動後に |'background'| を変更し
+た際にユーザー独自のカラースキームを設定したい場合、 |OptionSet| イベントを使っ
+てください。
+>lua
+    vim.api.nvim_create_autocmd("OptionSet", {
+      pattern = "background",
+      callback = function(args)
+	if args.match == "light" then
+	  vim.api.nvim_set_hl(0, "SkkeletonIndicatorEiji",
+	    { fg = "NvimDarkBlue", bg = "NvimLightGrey2" })
+	  -- その他の色も設定する。
+	else
+	  ------
+	end
+	require("skkeleton_indicator").refresh()
+      end,
+    })
+
+ハイライトグループの設定後、 |skkeleton-indicator-functions-refresh| を忘れずに
+呼んでください。
+<
 			  *skkeleton-indicator-highlight-skkeletonindicatoreiji*
 SkkeletonIndicatorEiji ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimLightBlue", bg = "NvimDarkGrey2",
+      ctermfg = "blue", ctermbg = "black", bold = true }
+<  light: >lua
+    { fg = "NvimDarkBlue", bg = "NvimLightGrey2",
+      ctermfg = "blue", ctermbg = "white", bold = true },
+
+直接入力モードで表示される文字列に利用されハイライトグループです。
+
+			  *skkeleton-indicator-highlight-skkeletonindicatorhira*
+SkkeletonIndicatorHira ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightGreen",
+      ctermfg = "black", ctermbg = "green", bold = true }
+<  light: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightGreen",
+      ctermfg = "white", ctermbg = "green", bold = true },
+
+ひらがなモードで表示される文字列に利用されハイライトグループです。
+
+			  *skkeleton-indicator-highlight-skkeletonindicatorkata*
+SkkeletonIndicatorKata ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightYellow",
+      ctermfg = "black", ctermbg = "yellow", bold = true }
+<  light: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightYellow",
+      ctermfg = "black", ctermbg = "yellow", bold = true },
+
+カタカナモードで表示される文字列に利用されハイライトグループです。
+
+		       *skkeleton-indicator-highlight-skkeletonindicatorhankata*
+SkkeletonIndicatorHankata ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightMagenta",
+      ctermfg = "black", ctermbg = "magenta", bold = true }
+<  light: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightMagenta",
+      ctermfg = "white", ctermbg = "magenta", bold = true },
+
+半角カタカナモードで表示される文字列に利用されハイライトグループです。
+
+		       *skkeleton-indicator-highlight-skkeletonindicatorZenkaku*
+SkkeletonIndicatorZenkaku ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimLightGrey2", bg = "NvimDarkCyan",
+      ctermfg = "black", ctermbg = "cyan", bold = true }
+<  light: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightBlue",
+      ctermfg = "black", ctermbg = "blue", bold = true },
+
+全角英数モードで表示される文字列に利用されハイライトグループです。
+
+			*skkeleton-indicator-highlight-skkeletonindicatorAbbrev*
+SkkeletonIndicatorAbbrev ~
+
+デフォルト:
+  dark: >lua
+    { fg = "NvimLightGrey2", bg = "NvimDarkRed",
+      ctermfg = "white", ctermbg = "red", bold = true }
+<  light: >lua
+    { fg = "NvimDarkGrey2", bg = "NvimLightRed",
+      ctermfg = "black", ctermbg = "red", bold = true },
+
+abbrev モードで表示される文字列に利用されハイライトグループです。
 
 
 ==============================================================================
