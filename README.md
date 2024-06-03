@@ -1,5 +1,9 @@
 # skkeleton\_indicator.nvim
 
+> [!WARNING]
+> Neovim 0.10.0 以降を使う場合はデフォルトブランチである
+> [`v2` ブランチ](https://github.com/delphinus/skkeleton_indicator.nvim)を利用してください。`main` ブランチは今後更新されません。
+
 Yet another indicator for [Skkeleton][].
 
 [Skkeleton]: https://github.com/vim-skk/skkeleton
