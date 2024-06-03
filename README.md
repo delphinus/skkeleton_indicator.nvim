@@ -4,11 +4,11 @@ Yet another indicator for [Skkeleton][].
 
 [Skkeleton]: https://github.com/vim-skk/skkeleton
 
-https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/951b87b9-6315-472d-af3e-04497acd8d88
+https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/54f51c64-aafc-4615-9e7d-ced5489731c3
 
-枠線を付けるとこんな感じです。
+明るい背景色にも対応しています。
 
-https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/74588fb8-a483-4d81-8046-f017351f9dd2
+https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/4e414ec7-2fdc-4e9c-ac3f-25990e66c7c8
 
 ## これは何？
 
