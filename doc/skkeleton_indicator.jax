@@ -5,10 +5,19 @@ Licence: zlib
 
 CONTENTS
 
+Version Warning		|skkeleton-indicator-version-warning|
 Introduction		|skkeleton-indicator-introduction|
 Usage			|skkeleton-indicator-usage|
 Config			|skkeleton-indicator-config|
 Caveats			|skkeleton-indicator-caveats|
+
+
+==============================================================================
+VERSION WARNING				   *skkeleton-indicator-version-warning*
+
+このブランチ（ `main` ）の開発はすでに終了しています。Neovim 0.10.0 以上に更新し
+た上で、 `v2` ブランチ（レポジトリーのデフォルトです）を利用してください。
+https://github.com/delphinus/skkeleton_indicator.nvim
 
 
 ==============================================================================
