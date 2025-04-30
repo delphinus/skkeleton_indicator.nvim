@@ -162,12 +162,16 @@ end
 function Indicator:move()
   if self:is_opened() and self.winid[1] then
     local mode = self.modes:detect()
-    vim.api.nvim_win_set_config(self.winid[1], {
+    -- NOTE: Sometimes it fails to do this when the window has already disappeared.
+    local ok = pcall(vim.api.nvim_win_set_config, self.winid[1], {
       relative = "cursor",
       row = config.row,
       col = config.col,
       width = mode.width,
     })
+    if not ok then
+      table.remove(self.winid, 1)
+    end
   end
 end
 
