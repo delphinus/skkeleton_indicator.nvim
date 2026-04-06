@@ -116,30 +116,57 @@ local function setup(self)
     ---@type SkkeletonIndicatorRawConfig
     local config = vim.tbl_extend("force", default_values, strings.snake_case_dict(opts or {}))
 
-    vim.validate {
-      module_name = { config.module_name, "s" },
-      eiji_hl_name = { config.eiji_hl_name, "s" },
-      hira_hl_name = { config.hira_hl_name, "s" },
-      kata_hl_name = { config.kata_hl_name, "s" },
-      hankata_hl_name = { config.hankata_hl_name, "s" },
-      zenkaku_hl_name = { config.zenkaku_hl_name, "s" },
-      abbrev_hl_name = { config.abbrev_hl_name, "s" },
-      eiji_text = { config.eiji_text, "s" },
-      hira_text = { config.hira_text, "s" },
-      kata_text = { config.kata_text, "s" },
-      hankata_text = { config.hankata_text, "s" },
-      zenkaku_text = { config.zenkaku_text, "s" },
-      abbrev_text = { config.abbrev_text, "s" },
-      border = { config.border, { "s", "f" }, true },
-      row = { config.row, "n" },
-      col = { config.col, "n" },
-      zindex = { config.zindex, "n", true },
-      always_shown = { config.always_shown, "b" },
-      fade_out_ms = { config.fade_out_ms, "n" },
-      ignore_ft = { config.ignore_ft, "t" },
-      buf_filter = { config.buf_filter, "f" },
-      use_default_highlight = { config.use_default_highlight, "b" },
-    }
+    if vim.fn.has("nvim-0.11") == 1 then
+      vim.validate( "module_name", config.module_name, "string" )
+      vim.validate( "eiji_hl_name", config.eiji_hl_name, "string" )
+      vim.validate( "hira_hl_name", config.hira_hl_name, "string" )
+      vim.validate( "kata_hl_name", config.kata_hl_name, "string" )
+      vim.validate( "hankata_hl_name", config.hankata_hl_name, "string" )
+      vim.validate( "zenkaku_hl_name", config.zenkaku_hl_name, "string" )
+      vim.validate( "abbrev_hl_name", config.abbrev_hl_name, "string" )
+      vim.validate( "eiji_text", config.eiji_text, "string" )
+      vim.validate( "hira_text", config.hira_text, "string" )
+      vim.validate( "kata_text", config.kata_text, "string" )
+      vim.validate( "hankata_text", config.hankata_text, "string" )
+      vim.validate( "zenkaku_text", config.zenkaku_text, "string" )
+      vim.validate( "abbrev_text", config.abbrev_text, "string" )
+      vim.validate( "border", config.border, { "string", "function" }, true )
+      vim.validate( "row", config.row, "number" )
+      vim.validate( "col", config.col, "number" )
+      vim.validate( "zindex", config.zindex, "number", true )
+      vim.validate( "always_shown", config.always_shown, "boolean" )
+      vim.validate( "fade_out_ms", config.fade_out_ms, "number" )
+      vim.validate( "ignore_ft", config.ignore_ft, "table" )
+      vim.validate( "buf_filter", config.buf_filter, "function" )
+      vim.validate( "use_default_highlight", config.use_default_highlight, "boolean" )
+    else
+      --TODO: remove vim.validate() old style caller in future (deperecated in Nvim 1.0)
+      vim.validate {
+        module_name = { config.module_name, "s" },
+        eiji_hl_name = { config.eiji_hl_name, "s" },
+        hira_hl_name = { config.hira_hl_name, "s" },
+        kata_hl_name = { config.kata_hl_name, "s" },
+        hankata_hl_name = { config.hankata_hl_name, "s" },
+        zenkaku_hl_name = { config.zenkaku_hl_name, "s" },
+        abbrev_hl_name = { config.abbrev_hl_name, "s" },
+        eiji_text = { config.eiji_text, "s" },
+        hira_text = { config.hira_text, "s" },
+        kata_text = { config.kata_text, "s" },
+        hankata_text = { config.hankata_text, "s" },
+        zenkaku_text = { config.zenkaku_text, "s" },
+        abbrev_text = { config.abbrev_text, "s" },
+        border = { config.border, { "s", "f" }, true },
+        row = { config.row, "n" },
+        col = { config.col, "n" },
+        zindex = { config.zindex, "n", true },
+        always_shown = { config.always_shown, "b" },
+        fade_out_ms = { config.fade_out_ms, "n" },
+        ignore_ft = { config.ignore_ft, "t" },
+        buf_filter = { config.buf_filter, "f" },
+        use_default_highlight = { config.use_default_highlight, "b" },
+      }
+    end
+
     self.values = config
   end
 end
