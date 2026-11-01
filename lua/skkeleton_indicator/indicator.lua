@@ -1,5 +1,6 @@
 local Modes = require "skkeleton_indicator.modes"
 local config = require "skkeleton_indicator.config"
+local imes = require "skkeleton_indicator.ime"
 
 ---@alias SkkeletonIndicatorBorder
 ---| "none"
@@ -21,7 +22,7 @@ local config = require "skkeleton_indicator.config"
 ---@class SkkeletonIndicator
 ---@field ns integer
 ---@field modes SkkeletonIndicatorModes
----@field is_skkeleton_loaded boolean
+---@field ime SkkeletonIndicatorIme? the input method enabled last
 ---@field timer uv_timer_t
 ---@field winid integer[]
 local Indicator = {}
@@ -29,32 +30,32 @@ local Indicator = {}
 ---@return SkkeletonIndicator
 function Indicator.new()
   local self = setmetatable({
-    is_skkeleton_loaded = false,
     ns = vim.api.nvim_create_namespace(config.module_name),
     modes = Modes.new(),
     timer = vim.uv.new_timer(),
     winid = {},
   }, { __index = Indicator })
   local group = vim.api.nvim_create_augroup(config.module_name, {})
-  vim
-    .iter({
-      { "InsertEnter", "*", self:method "open" },
-      { "InsertLeave", "*", self:method "close" },
-      { "CursorMovedI", "*", self:method "move" },
-      { "User", "skkeleton-mode-changed", self:method("update", "mode-changed") },
-      { "User", "skkeleton-disable-post", self:method("update", "disable-post") },
-      { "User", "skkeleton-enable-post", self:method("update", "enable-post") },
-      { "OptionSet", "background", self:method "refresh" },
-    })
-    :each(function(def)
-      vim.api.nvim_create_autocmd(def[1], { group = group, pattern = def[2], callback = def[3] })
-    end)
+  local defs = {
+    { "InsertEnter", "*", self:method "open" },
+    { "InsertLeave", "*", self:method "close" },
+    { "CursorMovedI", "*", self:method "move" },
+    { "OptionSet", "background", self:method "refresh" },
+  }
+  for _, ime in ipairs(imes) do
+    for _, event in ipairs { "mode-changed", "disable-post", "enable-post" } do
+      table.insert(defs, { "User", ime.event_prefix .. "-" .. event, self:method("update", event, ime) })
+    end
+  end
+  vim.iter(defs):each(function(def)
+    vim.api.nvim_create_autocmd(def[1], { group = group, pattern = def[2], callback = def[3] })
+  end)
   return self
 end
 
 ---@return boolean
 function Indicator:is_disabled()
-  if not config.always_shown and (not self.is_skkeleton_loaded or not vim.fn["skkeleton#is_enabled"]()) then
+  if not config.always_shown and (not self.ime or not self.ime.is_enabled()) then
     return true
   end
   ---@type integer
@@ -107,7 +108,7 @@ function Indicator:open()
   if self:is_opened() or self:is_disabled() or self:is_in_cmdwin() then
     return
   end
-  local mode = self.modes:detect()
+  local mode = self.modes:detect(self.ime)
   local buf = vim.api.nvim_create_buf(false, true)
   self:set_text(buf, mode)
   ---@type integer
@@ -128,8 +129,9 @@ function Indicator:open()
 end
 
 ---@param event string
+---@param ime? SkkeletonIndicatorIme the input method that invoked the event
 ---@return nil
-function Indicator:update(event)
+function Indicator:update(event, ime)
   vim.schedule(function()
     -- update() will be called in InsertLeave because skkeleton invokes the
     -- skkeleton-mode-changed event. So here it should checks mode() to confirm
@@ -139,7 +141,7 @@ function Indicator:update(event)
     end
 
     if event == "enable-post" then
-      self.is_skkeleton_loaded = true
+      self.ime = ime
     elseif event == "disable-post" and not config.always_shown then
       self:close()
       return
@@ -147,7 +149,7 @@ function Indicator:update(event)
 
     if self:is_opened() then
       local winid = self.winid[1]
-      local mode = self.modes:detect()
+      local mode = self.modes:detect(self.ime)
       local buf = vim.api.nvim_win_get_buf(winid)
       self:set_text(buf, mode)
       vim.api.nvim_win_set_config(winid, { border = self:border(mode), width = mode.width })
@@ -161,7 +163,7 @@ end
 ---@return nil
 function Indicator:move()
   if self:is_opened() and self.winid[1] then
-    local mode = self.modes:detect()
+    local mode = self.modes:detect(self.ime)
     -- NOTE: Sometimes it fails to do this when the window has already disappeared.
     local ok = pcall(vim.api.nvim_win_set_config, self.winid[1], {
       relative = "cursor",

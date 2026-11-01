@@ -17,6 +17,10 @@ https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/4e414ec7-2f
 
 Skkeleton の状態を入力中に判別しやすいよう、カーソルの側にモードを表示します。AquaSKK にあるようなやつです。
 
+[goda-skk.vim][] にも対応しています。どちらを使っているかは自動で判別します。
+
+[goda-skk.vim]: https://github.com/Shougo/goda-skk.vim
+
 ## インストール
 
 > [!WARNING]
