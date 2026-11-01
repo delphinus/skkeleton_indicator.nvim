@@ -18,6 +18,8 @@ Caveats			|skkeleton-indicator-caveats|
 INTRODUCTION				      *skkeleton-indicator-introduction*
 
 *skkeleton_indicator* は |skkeleton| の状態をカーソルの側に表示します。
+goda-skk.vim にも対応しています。どちらを使っているかは自動で判別します。
+https://github.com/Shougo/goda-skk.vim
 
 NOTE: このプラグインは Neovim 専用です。
 

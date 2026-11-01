@@ -66,14 +66,11 @@ function Modes:is_insert() -- luacheck: ignore 212
   return not not vim.api.nvim_get_mode().mode:find "i"
 end
 
+---@param ime? SkkeletonIndicatorIme
 ---@return SkkeletonIndicatorMode
-function Modes:detect()
-  ---@type boolean, ""|SkkeletonIndicatorModeName|nil
-  local ok, name = pcall(vim.fn["skkeleton#mode"])
-  if not ok or name == "" then
-    name = "eiji"
-  end
-  return self.modes[name]
+function Modes:detect(ime)
+  local name = ime and ime.mode()
+  return self.modes[name] or self.modes.eiji
 end
 
 return Modes
