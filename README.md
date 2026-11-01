@@ -1,6 +1,6 @@
 # skkeleton\_indicator.nvim
 
-Yet another indicator for [Skkeleton][].
+Yet another indicator for [Skkeleton][] and [goda-skk.vim][].
 
 [Skkeleton]: https://github.com/vim-skk/skkeleton
 
@@ -13,7 +13,7 @@ https://github.com/delphinus/skkeleton_indicator.nvim/assets/1239245/4e414ec7-2f
 ## これは何？
 
 > [!NOTE]
-> Skkeleton は Neovim/Vim 両対応ですが、このプラグインは Neovim 専用です。
+> Skkeleton と goda-skk.vim は Neovim/Vim 両対応ですが、このプラグインは Neovim 専用です。
 
 Skkeleton の状態を入力中に判別しやすいよう、カーソルの側にモードを表示します。AquaSKK にあるようなやつです。
 
